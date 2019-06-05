@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const httpStatus = require('http-status');
 
 const rolesEnum = ['user', 'admin'];
@@ -43,6 +45,45 @@ const userSchema = new mongoose.Schema(
     timestamps: true,
   },
 );
+
+userSchema.statics = {
+  async findOneAndGenerateToken(options) {
+    const { email, password } = options;
+    try {
+      if (!email) {
+        throw new Error({
+          message: 'An email is required to generate a token',
+        });
+      }
+      const user = await this.findOne({ email });
+      if (!user) {
+        throw new Error({
+          message: 'Email or password is not correct.',
+        });
+      }
+      const isCorrectPassword = await bcrypt.compare(
+        password,
+        user._doc.password,
+      );
+      if (!isCorrectPassword) {
+        throw new Error({
+          message: 'Email or password is not correct.',
+        });
+      }
+      delete user._doc.password;
+      const accessToken = await jwt.sign(
+        user.toJSON(),
+        process.env.JWT_SECRET,
+        {
+          expiresIn: process.env.JWT_EXPIRATION,
+        },
+      );
+      return { user, accessToken };
+    } catch (err) {
+      throw new Error(err);
+    }
+  },
+};
 
 function addDeleteQuery(query) {
   query.deletedAt = null;

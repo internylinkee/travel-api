@@ -10,7 +10,7 @@ module.exports.register = async (req, res, next) => {
       parseInt(process.env.SALT_ROUND),
     );
 
-    const newUser = await User.create({
+    await User.create({
       email,
       password: hashedPassword,
       fullName: {
@@ -18,7 +18,15 @@ module.exports.register = async (req, res, next) => {
         lastName,
       },
     });
-    return res.status(httpStatus.CREATED).json(newUser);
+    const { user, accessToken } = await User.findOneAndGenerateToken({
+      email,
+      password,
+    });
+
+    return res.status(httpStatus.CREATED).json({
+      user,
+      accessToken,
+    });
   } catch (err) {
     next(err);
   }
