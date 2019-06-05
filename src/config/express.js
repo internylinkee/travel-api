@@ -4,7 +4,7 @@ const helmet = require('helmet');
 const { logs } = require('./vars');
 
 const app = express();
-const routes = require('../api/routes/index');
+const routes = require('../api/routes');
 
 app.use(logger(logs));
 app.use(helmet());
