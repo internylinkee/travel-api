@@ -44,6 +44,20 @@ const userSchema = new mongoose.Schema(
   },
 );
 
+function addDeleteQuery(query) {
+  query.deletedAt = 1;
+}
+
+userSchema.pre('find', function(next) {
+  addDeleteQuery(this.getQuery());
+  next();
+});
+
+userSchema.pre('findOne', function(next) {
+  addDeleteQuery(this.getQuery());
+  next();
+});
+
 userSchema.post('save', (err, res, next) => {
   if (err.name === 'MongoError' && err.code === 11000) {
     next({
