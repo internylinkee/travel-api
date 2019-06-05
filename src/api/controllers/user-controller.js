@@ -3,11 +3,23 @@ const User = require('../models/user-model');
 
 module.exports.get = async (req, res, next) => {
   try {
-    const user = await User.findById(req.params.id);
+    const { _id } = req.user;
+    const user = await User.findById(req.params.id).lean();
     if (!user) {
       throw new Error('User not found.');
     }
-    return res.status(httpStatus.OK).json(user);
+
+    let isFollow = false;
+
+    for (let _user of user.followers) {
+      if (_user._id.equals(_id)) {
+        isFollow = true;
+      }
+    }
+    return res.status(httpStatus.OK).json({
+      user,
+      isFollow,
+    });
   } catch (err) {
     next(err);
   }
