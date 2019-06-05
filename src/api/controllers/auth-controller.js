@@ -35,3 +35,15 @@ module.exports.register = async (req, res, next) => {
     next(err);
   }
 };
+
+module.exports.login = async (req, res, next) => {
+  try {
+    const { user, accessToken } = await User.findOneAndGenerateToken(req.body);
+    return res.status(httpStatus.OK).json({
+      user,
+      accessToken,
+    });
+  } catch (err) {
+    next(err);
+  }
+};

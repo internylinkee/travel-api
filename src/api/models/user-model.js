@@ -51,24 +51,19 @@ userSchema.statics = {
     const { email, password } = options;
     try {
       if (!email) {
-        throw new Error({
-          message: 'An email is required to generate a token',
-        });
+        throw new Error('An email is required to generate a token');
       }
       const user = await this.findOne({ email });
       if (!user) {
-        throw new Error({
-          message: 'Email or password is not correct.',
-        });
+        throw new Error('Email or password is not correct.');
       }
+
       const isCorrectPassword = await bcrypt.compare(
         password,
         user._doc.password,
       );
       if (!isCorrectPassword) {
-        throw new Error({
-          message: 'Email or password is not correct.',
-        });
+        throw new Error('Email or password is not correct.');
       }
       delete user._doc.password;
       const accessToken = await jwt.sign(
