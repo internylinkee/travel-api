@@ -3,8 +3,8 @@ const validate = require('express-validation');
 const authController = require('../controllers/auth-controller');
 const { register } = require('../validations/auth-validate');
 
-const route = express.Router();
+const router = express.Router();
 
-route.post('/register', validate(register), authController.register);
+router.post('/register', validate(register), authController.register);
 
-module.exports = route;
+module.exports = router;

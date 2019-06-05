@@ -1,10 +1,13 @@
 const express = require('express');
 const validate = require('express-validation');
 const userController = require('../controllers/user-controller');
-const { get } = require('../validations/user-validate');
+const { get, update } = require('../validations/user-validate');
 
-const route = express.Router();
+const router = express.Router();
 
-route.get('/:id', validate(get), userController.get);
+router
+  .route('/:id')
+  .get(validate(get), userController.get)
+  .put(validate(update), userController.update);
 
-module.exports = route;
+module.exports = router;

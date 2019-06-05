@@ -45,7 +45,7 @@ const userSchema = new mongoose.Schema(
 );
 
 function addDeleteQuery(query) {
-  query.deletedAt = 1;
+  query.deletedAt = null;
 }
 
 userSchema.pre('find', function(next) {
