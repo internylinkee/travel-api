@@ -9,6 +9,8 @@ const router = express.Router();
 router
   .route('/:id')
   .get(validate(get), authorize(), userController.get)
-  .put(validate(update), userController.update);
+  .put(validate(update), authorize(), userController.update);
+
+router.route('/:id/follow').put(authorize(), userController.follow);
 
 module.exports = router;

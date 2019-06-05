@@ -1,5 +1,6 @@
 const httpStatus = require('http-status');
 const User = require('../models/user-model');
+const Notification = require('../models/notification-model');
 
 module.exports.get = async (req, res, next) => {
   try {
@@ -65,6 +66,65 @@ module.exports.update = async (req, res, next) => {
     await user.save();
 
     return res.status(httpStatus.OK).json(user);
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports.follow = async (req, res, next) => {
+  const {
+    params: { id },
+    user: {
+      _id: userId,
+      fullName: { firstName, lastName },
+    },
+  } = req;
+  let isFollow = false;
+  let updatedUser;
+
+  try {
+    const user = await User.findById(id).lean();
+    if (!user) {
+      throw new Error('User not found.');
+    }
+
+    for (let _user of user.followers) {
+      if (_user._id.equals(userId)) {
+        isFollow = true;
+        break;
+      }
+    }
+
+    if (!isFollow) {
+      updatedUser = await User.findByIdAndUpdate(
+        id,
+        {
+          $push: { followers: userId },
+        },
+        { new: true },
+      )
+        .select('followers')
+        .lean();
+      await Notification.create({
+        user: id,
+        text: `${firstName} ${lastName} đã follow bạn.`,
+      });
+    }
+    if (isFollow) {
+      updatedUser = await User.findByIdAndUpdate(
+        id,
+        {
+          $pull: { followers: userId },
+        },
+        { new: true },
+      )
+        .select('followers')
+        .lean();
+    }
+
+    return res.status(httpStatus.OK).json({
+      likeCount: updatedUser.followers.length,
+    });
   } catch (err) {
     next(err);
   }
