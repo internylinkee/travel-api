@@ -3,8 +3,12 @@ const bcrypt = require('bcrypt');
 const User = require('../models/user-model');
 
 module.exports.register = async (req, res, next) => {
-  const { email, password, firstName, lastName } = req.body;
+  const { firstName, lastName, email, password, confirmPassword } = req.body;
   try {
+    if (password !== confirmPassword) {
+      throw new Error('Mật khẩu xác nhận không trùng với mật khẩu.');
+    }
+
     const hashedPassword = await bcrypt.hash(
       password,
       parseInt(process.env.SALT_ROUND),
