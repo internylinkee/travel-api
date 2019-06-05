@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const httpStatus = require('http-status');
 
 const rolesEnum = ['user', 'admin'];
 
@@ -44,8 +45,11 @@ const userSchema = new mongoose.Schema(
 );
 
 userSchema.post('save', (err, res, next) => {
-  if (error.name === 'MongoError' && error.code === 11000) {
-    next(new Error('This email have been used.'));
+  if (err.name === 'MongoError' && err.code === 11000) {
+    next({
+      status: httpStatus.CONFLICT,
+      message: 'This email is already in use.',
+    });
   } else {
     next();
   }

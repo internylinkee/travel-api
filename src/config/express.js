@@ -15,11 +15,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/v1', routes);
 
 app.use((err, req, res, next) => {
-  const { status, message, errors } = err;
+  const { status, message, errors, stack } = err;
   res.status(status || 400).json({
-    status,
+    status: status || 400,
     message,
     errors,
+    stack,
   });
 });
 
