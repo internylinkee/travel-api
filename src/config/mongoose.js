@@ -10,7 +10,8 @@ mongoose.connection.on('error', err => {
 exports.connect = () => {
   mongoose.connect(mongo.uri, {
     keepAlive: 1,
-    useNewUrlParser: true
+    useCreateIndex: true,
+    useNewUrlParser: true,
   });
   return mongoose.connection;
 };
