@@ -3,14 +3,22 @@ const logger = require('morgan');
 const helmet = require('helmet');
 const { logs } = require('./vars');
 
-const app = express();
 const routes = require('../api/routes');
+
+const passport = require('passport');
+const strategies = require('./passport');
+
+const app = express();
 
 app.use(logger(logs));
 app.use(helmet());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(passport.initialize());
+
+passport.use('jwt', strategies.jwt);
 
 app.use('/v1', routes);
 
