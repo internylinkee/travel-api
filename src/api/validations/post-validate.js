@@ -1,6 +1,12 @@
 const Joi = require('joi');
 
 module.exports = {
+  getList: {
+    body: {
+      category: Joi.string().regex(/^[0-9a-fA-F]{24}$/),
+      location: Joi.string().regex(/^[0-9a-fA-F]{24}$/),
+    },
+  },
   get: {
     params: {
       id: Joi.string()
