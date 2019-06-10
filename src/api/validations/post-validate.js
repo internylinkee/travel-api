@@ -38,4 +38,18 @@ module.exports = {
         .max(255),
     },
   },
+  like: {
+    params: {
+      id: Joi.string()
+        .regex(/^[0-9a-fA-F]{24}$/)
+        .required(),
+    },
+  },
+  deletePost: {
+    params: {
+      id: Joi.string()
+        .regex(/^[0-9a-fA-F]{24}$/)
+        .required(),
+    },
+  },
 };

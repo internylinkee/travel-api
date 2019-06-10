@@ -40,6 +40,7 @@ const userSchema = new mongoose.Schema(
       certificate: String,
       introduction: String,
     },
+    deletedAt: Date,
   },
   {
     timestamps: true,

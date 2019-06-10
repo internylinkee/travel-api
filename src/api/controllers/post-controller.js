@@ -95,3 +95,24 @@ module.exports.like = async (req, res, next) => {
     next(err);
   }
 };
+
+module.exports.deletePost = async (req, res, next) => {
+  const {
+    params: { id },
+    user,
+  } = req;
+  try {
+    const post = await Post.findOneAndUpdate(
+      { _id: id, user },
+      { deletedAt: new Date() },
+    ).lean();
+    if (!post) {
+      throw new Error('Không tìm thấy bài viết.');
+    }
+    return res.status(httpStatus.OK).json({
+      message: 'Xoá bài viết thành công.',
+    });
+  } catch (err) {
+    next(err);
+  }
+};
