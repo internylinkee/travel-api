@@ -43,10 +43,30 @@ const postSchema = new mongoose.Schema(
       type: String,
       enum: typeEnum,
     },
+    deletedAt: Date,
   },
   {
     timestamps: true,
   },
 );
+
+function addDeleteQuery(query) {
+  query.deletedAt = null;
+}
+
+postSchema.pre('find', function(next) {
+  addDeleteQuery(this.getQuery());
+  next();
+});
+
+postSchema.pre('findOne', function(next) {
+  addDeleteQuery(this.getQuery());
+  next();
+});
+
+postSchema.pre('findOneAndUpdate', function(next) {
+  addDeleteQuery(this.getQuery());
+  next();
+});
 
 module.exports = mongoose.model('Post', postSchema, 'posts');
