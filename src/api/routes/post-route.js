@@ -3,6 +3,7 @@ const validate = require('express-validation');
 const postValidations = require('../validations/post-validate');
 const { authorize } = require('../middlewares/auth');
 const {
+  get,
   create,
   update,
   like,
@@ -26,6 +27,7 @@ router
 
 router
   .route('/:id')
+  .get(validate(postValidations.get), authorize(), get)
   .put(validate(postValidations.update), authorize(), update)
   .delete(validate(postValidations.deletePost), authorize(), deletePost);
 
