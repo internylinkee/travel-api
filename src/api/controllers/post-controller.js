@@ -2,6 +2,62 @@ const httpStatus = require('http-status');
 const Post = require('../models/post-model');
 const cloudinary = require('../../config/cloudinary');
 
+module.exports.getList = async (req, res, next) => {
+  const {
+    body: { location, category },
+    limit,
+    skip,
+  } = req;
+
+  const posts = [];
+  try {
+    if (!location && !category) {
+      posts.push(
+        await Post.find()
+          .skip(skip)
+          .limit(limit)
+          .sort({ likes: -1 })
+          .lean(),
+      );
+    } else if (location && category) {
+      posts.push(
+        await Post.find({
+          locations: { $in: location },
+          categories: { $in: category },
+        })
+          .skip(skip)
+          .limit(limit)
+          .sort({ likes: -1 })
+          .lean(),
+      );
+    } else if (location) {
+      posts.push(
+        await Post.find({
+          locations: { $in: location },
+        })
+          .skip(skip)
+          .limit(limit)
+          .sort({ likes: -1 })
+          .lean(),
+      );
+    } else {
+      posts.push(
+        await Post.find({
+          categories: { $in: category },
+        })
+          .skip(skip)
+          .limit(limit)
+          .sort({ likes: -1 })
+          .lean(),
+      );
+    }
+
+    return res.json(posts);
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports.get = async (req, res, next) => {
   const {
     params: { id },
