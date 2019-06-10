@@ -52,3 +52,46 @@ module.exports.update = async (req, res, next) => {
     next(err);
   }
 };
+
+module.exports.like = async (req, res, next) => {
+  const {
+    params: { id },
+    user: { _id: userId },
+  } = req;
+  let isLike = false;
+  let uploadedPost;
+  try {
+    const post = await Post.findById(id)
+      .select('likes')
+      .lean();
+    if (!post) {
+      throw new Error('Không tìm thấy bài viết.');
+    }
+
+    for (let liker of post.likes) {
+      if (liker.equals(userId)) {
+        isLike = true;
+        break;
+      }
+    }
+    if (isLike) {
+      uploadedPost = await Post.findOneAndUpdate(
+        { _id: id },
+        { $pull: { likes: userId } },
+        { new: true },
+      );
+    } else {
+      uploadedPost = await Post.findOneAndUpdate(
+        { _id: id },
+        { $push: { likes: userId } },
+        { new: true },
+      );
+    }
+
+    return res.status(httpStatus.OK).json({
+      likeCount: uploadedPost.likes.length,
+    });
+  } catch (err) {
+    next(err);
+  }
+};

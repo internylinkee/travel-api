@@ -2,7 +2,7 @@ const express = require('express');
 const validate = require('express-validation');
 const postValidations = require('../validations/post-validate');
 const { authorize } = require('../middlewares/auth');
-const { create, update } = require('../controllers/post-controller');
+const { create, update, like } = require('../controllers/post-controller');
 
 const multer = require('multer');
 const storage = multer.diskStorage({});
@@ -20,5 +20,6 @@ router
   );
 
 router.route('/:id').put(validate(postValidations.update), authorize(), update);
+router.route('/:id/like').put(authorize(), like);
 
 module.exports = router;
