@@ -2,6 +2,33 @@ const httpStatus = require('http-status');
 const Post = require('../models/post-model');
 const cloudinary = require('../../config/cloudinary');
 
+module.exports.get = async (req, res, next) => {
+  const {
+    params: { id },
+    user,
+  } = req;
+  let isLike = false;
+  try {
+    const post = await Post.findById(id);
+    if (!post) {
+      throw new Error('Không tìm thấy bài viết.');
+    }
+    for (let liker of post.likes) {
+      if (liker.equals(user._id)) {
+        isLike = true;
+        break;
+      }
+    }
+
+    return res.status(httpStatus.OK).json({
+      post,
+      isLike,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports.create = async (req, res, next) => {
   const { files, user } = req;
   try {
