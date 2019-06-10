@@ -25,3 +25,30 @@ module.exports.create = async (req, res, next) => {
     next(err);
   }
 };
+
+module.exports.update = async (req, res, next) => {
+  const {
+    user,
+    body: { title, content, locations, categories, type },
+    params: { id },
+  } = req;
+  try {
+    const post = await Post.findOne({ _id: id, user });
+    if (!post) {
+      throw new Error('Không tìm thấy bài viết.');
+    }
+
+    Object.assign(post, {
+      title: title || post.title,
+      content: content || post.content,
+      locations: locations || post.locations,
+      categories: categories || post.categories,
+      type: type || post.type,
+    });
+    await post.save();
+
+    return res.status(httpStatus.OK).json(post);
+  } catch (err) {
+    next(err);
+  }
+};

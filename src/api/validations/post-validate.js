@@ -23,4 +23,19 @@ module.exports = {
         .required(),
     },
   },
+  update: {
+    body: {
+      title: Joi.string()
+        .min(2)
+        .max(255),
+      content: Joi.string()
+        .min(2)
+        .max(3000),
+      categories: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
+      locations: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
+      type: Joi.string()
+        .min(2)
+        .max(255),
+    },
+  },
 };
