@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const logger = require('morgan');
 const helmet = require('helmet');
 const expressValidation = require('express-validation');
@@ -14,6 +15,7 @@ const app = express();
 app.use(logger(logs));
 app.use(helmet());
 
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
