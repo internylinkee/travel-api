@@ -10,6 +10,7 @@ const {
   update,
   like,
   deletePost,
+  createComment,
 } = require('../controllers/post-controller');
 
 const multer = require('multer');
@@ -37,5 +38,9 @@ router
 router
   .route('/:id/like')
   .put(validate(postValidations.like), authorize(), like);
+
+router
+  .route('/:id/comment')
+  .post(validate(postValidations.createComment), authorize(), createComment);
 
 module.exports = router;

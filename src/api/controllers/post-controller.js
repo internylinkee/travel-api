@@ -1,5 +1,6 @@
 const httpStatus = require('http-status');
 const Post = require('../models/post-model');
+const Comment = require('../models/comment-model');
 const cloudinary = require('../../config/cloudinary');
 
 module.exports.getList = async (req, res, next) => {
@@ -16,57 +17,35 @@ module.exports.getList = async (req, res, next) => {
     query.$or = [
       { title: { $regex: q, $options: 'i' } },
       { content: { $regex: q, $options: 'i' } },
-      { author: { $regex: q, $options: 'i' } },
     ];
+  }
+  async function findPost(query) {
+    return await Post.find(query)
+      .skip(skip)
+      .limit(limit)
+      .sort({ likes: -1 })
+      .lean();
   }
 
   try {
     if (!location && !category) {
-      posts = await Post.find(query)
-        .skip(skip)
-        .limit(limit)
-        .sort({ likes: -1 })
-        .lean();
+      posts = await findPost(query);
     } else if (location && category) {
-      posts = await Post.find({
+      posts = await findPost({
         $and: [
-          {
-            locations: { $in: location },
-            categories: { $in: category },
-          },
+          { locations: { $in: location } },
+          { categories: { $in: category } },
           query,
         ],
-      })
-        .skip(skip)
-        .limit(limit)
-        .sort({ likes: -1 })
-        .lean();
+      });
     } else if (location) {
-      posts = await Post.find({
-        $and: [
-          {
-            locations: { $in: location },
-          },
-          query,
-        ],
-      })
-        .skip(skip)
-        .limit(limit)
-        .sort({ likes: -1 })
-        .lean();
+      posts = await findPost({
+        $and: [{ locations: { $in: location } }, query],
+      });
     } else {
-      posts = await Post.find({
-        $and: [
-          {
-            categories: { $in: category },
-          },
-          query,
-        ],
-      })
-        .skip(skip)
-        .limit(limit)
-        .sort({ likes: -1 })
-        .lean();
+      posts = await findPost({
+        $and: [{ categories: { $in: category } }, query],
+      });
     }
 
     return res.json(posts);
@@ -212,6 +191,30 @@ module.exports.deletePost = async (req, res, next) => {
     return res.status(httpStatus.OK).json({
       message: 'Xoá bài viết thành công.',
     });
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports.createComment = async (req, res, next) => {
+  const {
+    body: { text },
+    params: { id },
+    user,
+  } = req;
+  try {
+    const post = await Post.findById(id);
+    if (!post) {
+      throw new Error('Không tìm thấy bài viết.');
+    }
+
+    const comment = await Comment.create({
+      user,
+      text,
+      post: id,
+    });
+
+    return res.status(httpStatus.CREATED).json(comment);
   } catch (err) {
     next(err);
   }
