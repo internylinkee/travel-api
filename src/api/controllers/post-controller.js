@@ -5,51 +5,68 @@ const cloudinary = require('../../config/cloudinary');
 module.exports.getList = async (req, res, next) => {
   const {
     body: { location, category },
+    query: { q },
     limit,
     skip,
   } = req;
 
-  const posts = [];
+  const query = {};
+  let posts;
+  if (q) {
+    query.$or = [
+      { title: { $regex: q, $options: 'i' } },
+      { content: { $regex: q, $options: 'i' } },
+      { author: { $regex: q, $options: 'i' } },
+    ];
+  }
+
   try {
     if (!location && !category) {
-      posts.push(
-        await Post.find()
-          .skip(skip)
-          .limit(limit)
-          .sort({ likes: -1 })
-          .lean(),
-      );
+      posts = await Post.find(query)
+        .skip(skip)
+        .limit(limit)
+        .sort({ likes: -1 })
+        .lean();
     } else if (location && category) {
-      posts.push(
-        await Post.find({
-          locations: { $in: location },
-          categories: { $in: category },
-        })
-          .skip(skip)
-          .limit(limit)
-          .sort({ likes: -1 })
-          .lean(),
-      );
+      posts = await Post.find({
+        $and: [
+          {
+            locations: { $in: location },
+            categories: { $in: category },
+          },
+          query,
+        ],
+      })
+        .skip(skip)
+        .limit(limit)
+        .sort({ likes: -1 })
+        .lean();
     } else if (location) {
-      posts.push(
-        await Post.find({
-          locations: { $in: location },
-        })
-          .skip(skip)
-          .limit(limit)
-          .sort({ likes: -1 })
-          .lean(),
-      );
+      posts = await Post.find({
+        $and: [
+          {
+            locations: { $in: location },
+          },
+          query,
+        ],
+      })
+        .skip(skip)
+        .limit(limit)
+        .sort({ likes: -1 })
+        .lean();
     } else {
-      posts.push(
-        await Post.find({
-          categories: { $in: category },
-        })
-          .skip(skip)
-          .limit(limit)
-          .sort({ likes: -1 })
-          .lean(),
-      );
+      posts = await Post.find({
+        $and: [
+          {
+            categories: { $in: category },
+          },
+          query,
+        ],
+      })
+        .skip(skip)
+        .limit(limit)
+        .sort({ likes: -1 })
+        .lean();
     }
 
     return res.json(posts);
