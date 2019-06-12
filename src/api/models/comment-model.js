@@ -18,4 +18,18 @@ const commentSchema = new mongoose.Schema(
   },
 );
 
+function addDeleteQuery(query) {
+  query.deletedAt = null;
+}
+
+commentSchema.pre('find', function(next) {
+  addDeleteQuery(this.getQuery());
+  next();
+});
+
+commentSchema.pre('findOne', function(next) {
+  addDeleteQuery(this.getQuery());
+  next();
+});
+
 module.exports = mongoose.model('Comment', commentSchema, 'comments');
