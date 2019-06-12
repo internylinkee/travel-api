@@ -196,6 +196,28 @@ module.exports.deletePost = async (req, res, next) => {
   }
 };
 
+module.exports.getListComments = async (req, res, next) => {
+  const {
+    params: { id },
+    limit,
+    skip,
+  } = req;
+  try {
+    const comments = await Comment.find({ post: id })
+      .limit(limit)
+      .skip(skip)
+      .populate({
+        path: 'user',
+        select: 'fullName avatar',
+      })
+      .lean();
+
+    return res.status(httpStatus.OK).json(comments);
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports.createComment = async (req, res, next) => {
   const {
     body: { text },

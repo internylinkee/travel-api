@@ -10,6 +10,7 @@ const {
   update,
   like,
   deletePost,
+  getListComments,
   createComment,
 } = require('../controllers/post-controller');
 
@@ -40,7 +41,13 @@ router
   .put(validate(postValidations.like), authorize(), like);
 
 router
-  .route('/:id/comment')
+  .route('/:id/comments')
+  .get(
+    validate(postValidations.getListComments),
+    authorize(),
+    paginate(),
+    getListComments,
+  )
   .post(validate(postValidations.createComment), authorize(), createComment);
 
 module.exports = router;
