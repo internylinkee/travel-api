@@ -12,6 +12,7 @@ exports.connect = () => {
     keepAlive: 1,
     useCreateIndex: true,
     useNewUrlParser: true,
+    useFindAndModify: false,
   });
   return mongoose.connection;
 };
