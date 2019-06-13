@@ -14,4 +14,11 @@ module.exports = {
         .required(),
     },
   },
+  deleteOne: {
+    params: {
+      id: Joi.string()
+        .regex(/^[0-9a-fA-F]{24}$/)
+        .required(),
+    },
+  },
 };

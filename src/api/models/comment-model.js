@@ -32,4 +32,9 @@ commentSchema.pre('findOne', function(next) {
   next();
 });
 
+commentSchema.pre('findOneAndUpdate', function(next) {
+  addDeleteQuery(this.getQuery());
+  next();
+});
+
 module.exports = mongoose.model('Comment', commentSchema, 'comments');
