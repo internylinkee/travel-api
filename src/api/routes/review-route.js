@@ -19,6 +19,11 @@ router
     validate(reviewValidations.update),
     authorize(),
     reviewControllers.update,
+  )
+  .delete(
+    validate(reviewValidations.delete),
+    authorize(),
+    reviewControllers.delete,
   );
 
 module.exports = router;

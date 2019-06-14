@@ -19,4 +19,23 @@ const reviewSchema = new mongoose.Schema(
   },
 );
 
+function addDeleteQuery(query) {
+  query.deletedAt = null;
+}
+
+reviewSchema.pre('find', function(next) {
+  addDeleteQuery(this.getQuery());
+  next();
+});
+
+reviewSchema.pre('findOne', function(next) {
+  addDeleteQuery(this.getQuery());
+  next();
+});
+
+reviewSchema.pre('findOneAndUpdate', function(next) {
+  addDeleteQuery(this.getQuery());
+  next();
+});
+
 module.exports = mongoose.model('Review', reviewSchema, 'reviews');
