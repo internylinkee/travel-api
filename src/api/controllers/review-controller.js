@@ -44,7 +44,7 @@ module.exports.create = async (req, res, next) => {
     });
 
     const [{ reviewCount, avgRating }] = await Review.aggregate([
-      { $match: { tourGuide: tourGuide._id } },
+      { $match: { tourGuide: tourGuide._id, deletedAt: null } },
       {
         $group: {
           _id: null,
@@ -78,7 +78,7 @@ module.exports.update = async (req, res, next) => {
     }
 
     const [{ reviewCount, avgRating }] = await Review.aggregate([
-      { $match: { tourGuide: review.tourGuide } },
+      { $match: { tourGuide: review.tourGuide, deletedAt: null } },
       {
         $group: {
           _id: null,
@@ -98,6 +98,55 @@ module.exports.update = async (req, res, next) => {
 
     return res.status(httpStatus.OK).json({
       message: 'Cập nhật thành công',
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports.delete = async (req, res, next) => {
+  const {
+    user,
+    params: { id },
+  } = req;
+  let reviewCount = 0;
+  let avgRating = 0;
+  try {
+    const review = await Review.findOneAndUpdate(
+      { _id: id, user },
+      { deletedAt: new Date() },
+    ).lean();
+
+    if (!review) {
+      throw new Error('Không tìm thấy đánh giá.');
+    }
+
+    const [reviewAggregated] = await Review.aggregate([
+      { $match: { tourGuide: review.tourGuide, deletedAt: null } },
+      {
+        $group: {
+          _id: null,
+          reviewCount: { $sum: 1 },
+          avgRating: { $avg: '$rating' },
+        },
+      },
+    ]);
+
+    if (reviewAggregated) {
+      reviewCount = reviewAggregated.reviewCount;
+      avgRating = reviewAggregated.avgRating;
+    }
+
+    await User.updateOne(
+      { _id: review.tourGuide },
+      {
+        'tourGuideProfile.rating': avgRating,
+        'tourGuideProfile.reviewCount': reviewCount,
+      },
+    );
+
+    return res.status(httpStatus.OK).json({
+      message: 'Đã xoá thành công.',
     });
   } catch (err) {
     next(err);
