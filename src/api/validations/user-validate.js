@@ -43,22 +43,4 @@ module.exports = {
         .required(),
     },
   },
-
-  review: {
-    params: {
-      id: Joi.string()
-        .regex(/^[0-9a-fA-F]{24}$/)
-        .required(),
-    },
-    body: {
-      text: Joi.string()
-        .min(2)
-        .max(255)
-        .required(),
-      rating: Joi.number()
-        .min(0)
-        .max(5)
-        .required(),
-    },
-  },
 };
