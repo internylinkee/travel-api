@@ -5,6 +5,7 @@ const { authorize } = require('../middlewares/auth');
 const { paginate } = require('../middlewares/paginate');
 const {
   getList,
+  getHotPost,
   get,
   create,
   update,
@@ -29,6 +30,8 @@ router
     authorize(),
     create,
   );
+
+router.route('/hot').get(authorize(), getHotPost);
 
 router
   .route('/:id')

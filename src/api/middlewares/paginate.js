@@ -1,6 +1,6 @@
 module.exports.paginate = (limit = 20) => {
   return (req, res, next) => {
-    const { page } = req.params;
+    const { page } = req.query;
     const skip = (page - 1) * limit;
 
     req.skip = skip;

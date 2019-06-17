@@ -241,3 +241,16 @@ module.exports.createComment = async (req, res, next) => {
     next(err);
   }
 };
+
+module.exports.getHotPost = async (req, res, next) => {
+  try {
+    const posts = await Post.find()
+      .sort({ likes: -1 })
+      .limit(10)
+      .lean(true);
+
+    return res.status(httpStatus.OK).json(posts);
+  } catch (err) {
+    next(err);
+  }
+};
