@@ -1,19 +1,9 @@
 const express = require('express');
 const validate = require('express-validation');
+const postControllers = require('../controllers/post-controller');
 const postValidations = require('../validations/post-validate');
 const { authorize } = require('../middlewares/auth');
 const { paginate } = require('../middlewares/paginate');
-const {
-  getList,
-  getHotPost,
-  get,
-  create,
-  update,
-  like,
-  deletePost,
-  getListComments,
-  createComment,
-} = require('../controllers/post-controller');
 
 const multer = require('multer');
 const storage = multer.diskStorage({});
@@ -23,25 +13,34 @@ const router = express.Router();
 
 router
   .route('/')
-  .get(validate(postValidations.getList), paginate(), authorize(), getList)
+  .get(
+    validate(postValidations.getList),
+    paginate(),
+    authorize(),
+    postControllers.getList,
+  )
   .post(
     upload.array('images', 10),
     validate(postValidations.create),
     authorize(),
-    create,
+    postControllers.create,
   );
 
-router.route('/hot').get(authorize(), getHotPost);
+router.route('/hot').get(authorize(), postControllers.getHotPost);
 
 router
   .route('/:id')
-  .get(validate(postValidations.get), authorize(), get)
-  .put(validate(postValidations.update), authorize(), update)
-  .delete(validate(postValidations.deletePost), authorize(), deletePost);
+  .get(validate(postValidations.get), authorize(), postControllers.get)
+  .put(validate(postValidations.update), authorize(), postControllers.update)
+  .delete(
+    validate(postValidations.delete),
+    authorize(),
+    postControllers.delete,
+  );
 
 router
   .route('/:id/like')
-  .put(validate(postValidations.like), authorize(), like);
+  .put(validate(postValidations.like), authorize(), postControllers.like);
 
 router
   .route('/:id/comments')
@@ -49,8 +48,12 @@ router
     validate(postValidations.getListComments),
     authorize(),
     paginate(),
-    getListComments,
+    postControllers.getListComments,
   )
-  .post(validate(postValidations.createComment), authorize(), createComment);
+  .post(
+    validate(postValidations.createComment),
+    authorize(),
+    postControllers.createComment,
+  );
 
 module.exports = router;
