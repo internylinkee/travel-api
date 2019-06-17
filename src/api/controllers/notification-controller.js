@@ -20,3 +20,17 @@ module.exports.getAll = async (req, res, next) => {
     next(err);
   }
 };
+
+module.exports.countUnread = async (req, res, next) => {
+  try {
+    const unreadQuantity = await Notification.count({
+      user: req.user,
+      isRead: false,
+    });
+    return res.status(httpStatus.OK).json({
+      unreadQuantity,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
