@@ -22,7 +22,7 @@ module.exports.update = async (req, res, next) => {
   }
 };
 
-module.exports.deleteOne = async (req, res, next) => {
+module.exports.delete = async (req, res, next) => {
   const {
     params: { id },
     user,

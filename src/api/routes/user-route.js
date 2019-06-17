@@ -1,18 +1,18 @@
 const express = require('express');
 const validate = require('express-validation');
-const userController = require('../controllers/user-controller');
+const userControllers = require('../controllers/user-controller');
+const userValidations = require('../validations/user-validate');
 const { authorize, ADMIN } = require('../middlewares/auth');
-const { get, update, follow } = require('../validations/user-validate');
 
 const router = express.Router();
 
 router
   .route('/:id')
-  .get(validate(get), authorize(), userController.get)
-  .put(validate(update), authorize(), userController.update);
+  .get(validate(userValidations.get), authorize(), userControllers.get)
+  .put(validate(userValidations.update), authorize(), userControllers.update);
 
 router
   .route('/:id/follow')
-  .put(validate(follow), authorize(), userController.follow);
+  .put(validate(userValidations.follow), authorize(), userControllers.follow);
 
 module.exports = router;

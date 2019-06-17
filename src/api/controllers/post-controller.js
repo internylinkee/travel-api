@@ -175,7 +175,7 @@ module.exports.like = async (req, res, next) => {
   }
 };
 
-module.exports.deletePost = async (req, res, next) => {
+module.exports.delete = async (req, res, next) => {
   const {
     params: { id },
     user,

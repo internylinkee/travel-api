@@ -58,7 +58,7 @@ module.exports = {
         .required(),
     },
   },
-  deletePost: {
+  delete: {
     params: {
       id: Joi.string()
         .regex(/^[0-9a-fA-F]{24}$/)
