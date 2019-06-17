@@ -34,3 +34,25 @@ module.exports.countUnread = async (req, res, next) => {
     next(err);
   }
 };
+
+module.exports.markAsRead = async (req, res, next) => {
+  const {
+    user,
+    params: { id },
+  } = req;
+  try {
+    const notification = await Notification.findOneAndUpdate(
+      { _id: id, user },
+      { isRead: true },
+      { new: true },
+    );
+
+    if (!notification) {
+      throw new Error('Không tìm thấy thông báo.');
+    }
+
+    return res.status(httpStatus.OK).json(notification);
+  } catch (err) {
+    next(err);
+  }
+};
