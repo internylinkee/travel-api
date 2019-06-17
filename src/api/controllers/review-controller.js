@@ -39,8 +39,9 @@ module.exports.create = async (req, res, next) => {
 
     await Notification.create({
       user: tourGuide,
-      text: `Bạn đã nhận được 1 nhận xét từ
-       ${user.fullName.firstName} ${user.fullName.lastName}`,
+      text: `Bạn đã nhận được 1 nhận xét từ ${user.fullName.firstName} ${
+        user.fullName.lastName
+      }`,
     });
 
     const [{ reviewCount, avgRating }] = await Review.aggregate([
