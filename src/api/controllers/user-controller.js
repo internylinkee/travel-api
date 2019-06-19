@@ -2,6 +2,37 @@ const httpStatus = require('http-status');
 const User = require('../models/user-model');
 const Notification = require('../models/notification-model');
 
+exports.getList = async (req, res, next) => {
+  const {
+    query: { admin, tourGuide, q },
+    skip,
+    limit,
+  } = req;
+
+  const query = {
+    role: admin ? 'admin' : 'user',
+    isTourGuide: tourGuide,
+  };
+
+  if (q) {
+    query.$or = [
+      { 'fullName.firstName': { $regex: q, $options: 'i' } },
+      { 'fullName.lastName': { $regex: q, $options: 'i' } },
+    ];
+  }
+
+  try {
+    const users = await User.find(query)
+      .skip(skip)
+      .limit(limit)
+      .lean();
+
+    return res.status(httpStatus.OK).json(users);
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports.get = async (req, res, next) => {
   try {
     const { _id } = req.user;
