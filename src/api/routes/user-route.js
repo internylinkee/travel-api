@@ -19,7 +19,12 @@ router
 router
   .route('/:id')
   .get(validate(userValidations.get), authorize(), userControllers.get)
-  .put(validate(userValidations.update), authorize(), userControllers.update);
+  .put(validate(userValidations.update), authorize(), userControllers.update)
+  .delete(
+    validate(userValidations.delete),
+    authorize(ADMIN),
+    userControllers.delete,
+  );
 
 router
   .route('/:id/follow')
