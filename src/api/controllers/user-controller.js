@@ -12,6 +12,7 @@ exports.getList = async (req, res, next) => {
   const query = {
     role: admin ? 'admin' : 'user',
     isTourGuide: tourGuide,
+    _id: { $ne: req.user._id },
   };
 
   if (q) {
@@ -33,7 +34,7 @@ exports.getList = async (req, res, next) => {
   }
 };
 
-module.exports.get = async (req, res, next) => {
+exports.get = async (req, res, next) => {
   try {
     const { _id } = req.user;
     const user = await User.findById(req.params.id).lean();
@@ -57,7 +58,7 @@ module.exports.get = async (req, res, next) => {
   }
 };
 
-module.exports.update = async (req, res, next) => {
+exports.update = async (req, res, next) => {
   try {
     const {
       body: {
@@ -102,7 +103,7 @@ module.exports.update = async (req, res, next) => {
   }
 };
 
-module.exports.follow = async (req, res, next) => {
+exports.follow = async (req, res, next) => {
   const {
     params: { id },
     user: {
@@ -155,6 +156,34 @@ module.exports.follow = async (req, res, next) => {
 
     return res.status(httpStatus.OK).json({
       likeCount: updatedUser.followers.length,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.delete = async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    if (req.user._id.equals(id)) {
+      throw new Error('Không thể xoá tài khoản là chính bạn.');
+    }
+
+    const user = await User.findByIdAndUpdate(
+      id,
+      {
+        deletedAt: new Date(),
+      },
+      { new: true },
+    );
+
+    if (!user) {
+      throw new Error('Không tìm thấy user.');
+    }
+
+    return res.status(httpStatus.OK).json({
+      message: 'Đã xoá thành công',
     });
   } catch (err) {
     next(err);

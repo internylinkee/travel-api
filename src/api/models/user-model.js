@@ -97,6 +97,11 @@ userSchema.pre('findOne', function(next) {
   next();
 });
 
+userSchema.pre('findOneAndUpdate', function(next) {
+  addDeleteQuery(this.getQuery());
+  next();
+});
+
 userSchema.post('save', (err, res, next) => {
   if (err.name === 'MongoError' && err.code === 11000) {
     next({
