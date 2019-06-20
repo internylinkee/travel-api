@@ -3,7 +3,9 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const httpStatus = require('http-status');
 
-const rolesEnum = ['user', 'admin'];
+const ADMIN = 'admin';
+const LOGGED_USER = 'user';
+const rolesEnum = [LOGGED_USER, ADMIN];
 
 const userSchema = new mongoose.Schema(
   {
@@ -20,10 +22,10 @@ const userSchema = new mongoose.Schema(
     facebookUrl: String,
     facebookId: String,
     phone: String,
-    roles: {
+    role: {
       enum: rolesEnum,
       type: String,
-      default: 'user',
+      default: LOGGED_USER,
     },
     followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     isTourGuide: {

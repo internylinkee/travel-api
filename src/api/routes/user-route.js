@@ -3,8 +3,18 @@ const validate = require('express-validation');
 const userControllers = require('../controllers/user-controller');
 const userValidations = require('../validations/user-validate');
 const { authorize, ADMIN } = require('../middlewares/auth');
+const { paginate } = require('../middlewares/paginate');
 
 const router = express.Router();
+
+router
+  .route('/')
+  .get(
+    validate(userValidations.getList),
+    authorize(ADMIN),
+    paginate(),
+    userControllers.getList,
+  );
 
 router
   .route('/:id')

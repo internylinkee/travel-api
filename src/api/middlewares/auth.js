@@ -1,7 +1,7 @@
 const passport = require('passport');
 const httpStatus = require('http-status');
-
 const ADMIN = 'admin';
+const LOGGED_USER = 'user';
 
 const handleJWT = (req, res, next, role) => async (err, user, info) => {
   const error = err || info;
@@ -30,6 +30,7 @@ const handleJWT = (req, res, next, role) => async (err, user, info) => {
 };
 
 exports.ADMIN = ADMIN;
+exports.LOGGED_USER = LOGGED_USER;
 
 exports.authorize = (role = 'user') => (req, res, next) =>
   passport.authenticate(

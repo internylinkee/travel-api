@@ -1,6 +1,16 @@
 const Joi = require('joi');
 
 module.exports = {
+  getList: {
+    query: {
+      page: Joi.number()
+        .integer()
+        .min(1),
+      admin: Joi.boolean().default(false),
+      tourGuide: Joi.boolean().default(false),
+    },
+  },
+
   get: {
     params: {
       id: Joi.string()
