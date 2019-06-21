@@ -86,8 +86,8 @@ module.exports.create = async (req, res, next) => {
   try {
     const fileUploaded = await Promise.all(
       files.map(({ path }) =>
-        cloudinary.uploader.upload(path, { transformation: [{ width: 1000 }] }),
-      ),
+        cloudinary.uploader.upload(path, { transformation: [{ width: 1000 }] })
+      )
     );
 
     const urlFileUploaded = fileUploaded.map(file => file.secure_url);
@@ -157,13 +157,13 @@ module.exports.like = async (req, res, next) => {
       uploadedPost = await Post.findOneAndUpdate(
         { _id: id },
         { $pull: { likes: userId } },
-        { new: true },
+        { new: true }
       );
     } else {
       uploadedPost = await Post.findOneAndUpdate(
         { _id: id },
         { $push: { likes: userId } },
-        { new: true },
+        { new: true }
       );
     }
 
@@ -183,7 +183,7 @@ module.exports.delete = async (req, res, next) => {
   try {
     const post = await Post.findOneAndUpdate(
       { _id: id, user },
-      { deletedAt: new Date() },
+      { deletedAt: new Date() }
     ).lean();
     if (!post) {
       throw new Error('Không tìm thấy bài viết.');
@@ -204,8 +204,8 @@ module.exports.getListComments = async (req, res, next) => {
   } = req;
   try {
     const comments = await Comment.find({ post: id })
-      .limit(limit)
       .skip(skip)
+      .limit(limit)
       .populate({
         path: 'user',
         select: 'fullName avatar',

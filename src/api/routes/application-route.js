@@ -13,12 +13,20 @@ router
     validate(applicationValidations.getList),
     authorize(ADMIN),
     paginate(),
-    applicationControllers.getList,
+    applicationControllers.getList
   )
   .post(
     validate(applicationValidations.create),
     authorize(),
-    applicationControllers.create,
+    applicationControllers.create
+  );
+
+router
+  .route('/:id')
+  .get(
+    validate(applicationValidations.get),
+    authorize(),
+    applicationControllers.get
   );
 
 module.exports = router;
