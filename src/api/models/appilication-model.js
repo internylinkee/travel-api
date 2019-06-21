@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 
-const PENDING = 'pending';
-const CANCEL = 'cancel';
-const CONFIRMED = 'confirmed';
+const STATUS_PENDING = 'pending';
+const STATUS_CANCEL = 'cancel';
+const STATUS_CONFIRMED = 'confirmed';
 
-const statusEnum = [PENDING, CANCEL, CONFIRMED];
+const statusEnum = [STATUS_PENDING, STATUS_CANCEL, STATUS_CONFIRMED];
 
 const applicationSchema = new mongoose.Schema(
   {
@@ -21,7 +21,7 @@ const applicationSchema = new mongoose.Schema(
     status: {
       type: String,
       enum: statusEnum,
-      default: PENDING,
+      default: STATUS_PENDING,
     },
   },
   {
@@ -34,3 +34,6 @@ module.exports = mongoose.model(
   applicationSchema,
   'applications',
 );
+module.exports.STATUS_PENDING = STATUS_PENDING;
+module.exports.STATUS_CANCEL = STATUS_CANCEL;
+module.exports.STATUS_CONFIRMED = STATUS_CONFIRMED;
