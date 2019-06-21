@@ -11,6 +11,15 @@ module.exports = {
         .max(255),
     },
   },
+
+  get: {
+    params: {
+      id: Joi.string()
+        .regex(/^[0-9a-fA-F]{24}$/)
+        .required(),
+    },
+  },
+
   create: {
     body: {
       location: Joi.string()

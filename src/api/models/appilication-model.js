@@ -26,13 +26,13 @@ const applicationSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  },
+  }
 );
 
 module.exports = mongoose.model(
   'Application',
   applicationSchema,
-  'applications',
+  'applications'
 );
 module.exports.STATUS_PENDING = STATUS_PENDING;
 module.exports.STATUS_CANCEL = STATUS_CANCEL;

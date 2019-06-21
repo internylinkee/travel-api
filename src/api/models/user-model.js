@@ -46,7 +46,7 @@ const userSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  },
+  }
 );
 
 userSchema.statics = {
@@ -63,7 +63,7 @@ userSchema.statics = {
 
       const isCorrectPassword = await bcrypt.compare(
         password,
-        user._doc.password,
+        user._doc.password
       );
       if (!isCorrectPassword) {
         throw new Error('Email or password is not correct.');
@@ -74,7 +74,7 @@ userSchema.statics = {
         process.env.JWT_SECRET,
         {
           expiresIn: process.env.JWT_EXPIRATION,
-        },
+        }
       );
       return { user, accessToken };
     } catch (err) {
@@ -114,3 +114,5 @@ userSchema.post('save', (err, res, next) => {
 });
 
 module.exports = mongoose.model('User', userSchema, 'users');
+module.exports.ADMIN = ADMIN;
+module.exports.LOGGED_USER = LOGGED_USER;
