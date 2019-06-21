@@ -1,6 +1,16 @@
 const Joi = require('joi');
 
 module.exports = {
+  getList: {
+    query: {
+      page: Joi.number()
+        .integer()
+        .min(1),
+      q: Joi.string()
+        .min(1)
+        .max(255),
+    },
+  },
   create: {
     body: {
       location: Joi.string()

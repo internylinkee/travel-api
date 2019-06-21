@@ -1,6 +1,30 @@
 const httpStatus = require('http-status');
 const Application = require('../models/appilication-model');
 
+module.exports.getList = async (req, res, next) => {
+  const {
+    query: { q },
+    skip,
+    limit,
+  } = req;
+
+  const query = {};
+  if (q) {
+    query.status = q;
+  }
+
+  try {
+    const applications = await Application.find(query)
+      .skip(skip)
+      .limit(limit)
+      .lean();
+
+    return res.stauts(httpStatus.OK).json(applications);
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports.create = async (req, res, next) => {
   try {
     const isApplicationExist =
