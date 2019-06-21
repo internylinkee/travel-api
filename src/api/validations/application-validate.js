@@ -38,4 +38,12 @@ module.exports = {
         .error(() => ({ message: 'introduction is required.' })),
     },
   },
+
+  cancel: {
+    params: {
+      id: Joi.string()
+        .regex(/^[0-9a-fA-F]{24}$/)
+        .required(),
+    },
+  },
 };

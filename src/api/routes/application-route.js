@@ -13,12 +13,12 @@ router
     validate(applicationValidations.getList),
     authorize(ADMIN),
     paginate(),
-    applicationControllers.getList
+    applicationControllers.getList,
   )
   .post(
     validate(applicationValidations.create),
     authorize(),
-    applicationControllers.create
+    applicationControllers.create,
   );
 
 router
@@ -26,7 +26,15 @@ router
   .get(
     validate(applicationValidations.get),
     authorize(),
-    applicationControllers.get
+    applicationControllers.get,
+  );
+
+router
+  .route('/:id/cancel')
+  .put(
+    validate(applicationValidations.cancel),
+    authorize(ADMIN),
+    applicationControllers.cancel,
   );
 
 module.exports = router;
