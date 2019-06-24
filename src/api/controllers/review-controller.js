@@ -3,7 +3,7 @@ const User = require('../models/user-model');
 const Review = require('../models/review-model');
 const Notification = require('../models/notification-model');
 
-module.exports.create = async (req, res, next) => {
+exports.create = async (req, res, next) => {
   const {
     user,
     body: { text, rating, tourGuideId },
@@ -65,7 +65,7 @@ module.exports.create = async (req, res, next) => {
   }
 };
 
-module.exports.update = async (req, res, next) => {
+exports.update = async (req, res, next) => {
   const {
     user,
     params: { id },
@@ -74,6 +74,7 @@ module.exports.update = async (req, res, next) => {
     const review = await Review.findOneAndUpdate({ _id: id, user }, req.body, {
       new: true,
     }).lean();
+
     if (!review) {
       throw new Error('Không tìm thấy đánh giá.');
     }
@@ -105,7 +106,7 @@ module.exports.update = async (req, res, next) => {
   }
 };
 
-module.exports.delete = async (req, res, next) => {
+exports.delete = async (req, res, next) => {
   const {
     user,
     params: { id },
