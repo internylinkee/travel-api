@@ -115,62 +115,58 @@ router
    *         description: No auth token
    */
   .get(validate(userValidations.get), authorize(), userControllers.get)
-<<<<<<< HEAD
   .put(validate(userValidations.update), authorize(), userControllers.update)
   .delete(
     validate(userValidations.delete),
     authorize(ADMIN),
     userControllers.delete,
   );
-=======
-  /**
-   * @swagger
-   * /users/{id}:
-   *   put:
-   *     tags:
-   *     - User
-   *     summary: Update user
-   *     description: Update the info of user by user id
-   *     parameters:
-   *     - in: path
-   *       name: id
-   *       required: true
-   *       description: User id
-   *     - in: header
-   *       name: Authorization
-   *       required: true
-   *       description: The access token
-   *     - in: body
-   *       name: body
-   *       required: true
-   *       schema:
-   *         type: object
-   *         properties:
-   *           firstName:
-   *             type: string
-   *           lastName:
-   *             type: string
-   *           facebookUrl:
-   *             type: string
-   *           phone:
-   *             type: string
-   *           location:
-   *             type: string
-   *           certificate:
-   *             type: string
-   *           introduction:
-   *             type: string
-   *     produces:
-   *     - application/json
-   *     responses:
-   *       200:
-   *         desscription: OK
-   *         schema:
-   *           type: object
-   *           $ref: '#/definitions/User'
-   */
-  .put(validate(userValidations.update), authorize(), userControllers.update);
->>>>>>> init swagger
+/**
+ * @swagger
+ * /users/{id}:
+ *   put:
+ *     tags:
+ *     - User
+ *     summary: Update user
+ *     description: Update the info of user by user id
+ *     parameters:
+ *     - in: path
+ *       name: id
+ *       required: true
+ *       description: User id
+ *     - in: header
+ *       name: Authorization
+ *       required: true
+ *       description: The access token
+ *     - in: body
+ *       name: body
+ *       required: true
+ *       schema:
+ *         type: object
+ *         properties:
+ *           firstName:
+ *             type: string
+ *           lastName:
+ *             type: string
+ *           facebookUrl:
+ *             type: string
+ *           phone:
+ *             type: string
+ *           location:
+ *             type: string
+ *           certificate:
+ *             type: string
+ *           introduction:
+ *             type: string
+ *     produces:
+ *     - application/json
+ *     responses:
+ *       200:
+ *         desscription: OK
+ *         schema:
+ *           type: object
+ *           $ref: '#/definitions/User'
+ */
 
 router
   .route('/:id/follow')
