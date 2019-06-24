@@ -71,7 +71,12 @@ exports.update = async (req, res, next) => {
         introduction,
       },
       params: { id },
+      user: { _id: userId },
     } = req;
+
+    if (!userId.equals(id)) {
+      throw new Error('Bạn không thể cập nhật thông tin của người dùng khác.');
+    }
 
     const user = await User.findById(id);
     if (!user) {
@@ -142,6 +147,7 @@ exports.follow = async (req, res, next) => {
         text: `${firstName} ${lastName} đã follow bạn.`,
       });
     }
+
     if (isFollow) {
       updatedUser = await User.findByIdAndUpdate(
         id,

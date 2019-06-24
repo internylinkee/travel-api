@@ -2,7 +2,7 @@ const httpStatus = require('http-status');
 const bcrypt = require('bcrypt');
 const User = require('../models/user-model');
 
-module.exports.register = async (req, res, next) => {
+exports.register = async (req, res, next) => {
   const { firstName, lastName, email, password, confirmPassword } = req.body;
   try {
     if (password !== confirmPassword) {
@@ -36,7 +36,7 @@ module.exports.register = async (req, res, next) => {
   }
 };
 
-module.exports.login = async (req, res, next) => {
+exports.login = async (req, res, next) => {
   try {
     const { user, accessToken } = await User.findOneAndGenerateToken(req.body);
     return res.status(httpStatus.OK).json({

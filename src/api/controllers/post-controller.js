@@ -1,9 +1,10 @@
 const httpStatus = require('http-status');
 const Post = require('../models/post-model');
 const Comment = require('../models/comment-model');
+const Notification = require('../models/notification-model');
 const cloudinary = require('../../config/cloudinary');
 
-module.exports.getList = async (req, res, next) => {
+exports.getList = async (req, res, next) => {
   const {
     body: { location, category },
     query: { q },
@@ -19,6 +20,7 @@ module.exports.getList = async (req, res, next) => {
       { content: { $regex: q, $options: 'i' } },
     ];
   }
+
   async function findPost(query) {
     return await Post.find(query)
       .skip(skip)
@@ -54,17 +56,20 @@ module.exports.getList = async (req, res, next) => {
   }
 };
 
-module.exports.get = async (req, res, next) => {
+exports.get = async (req, res, next) => {
   const {
     params: { id },
     user,
   } = req;
   let isLike = false;
+
   try {
     const post = await Post.findById(id);
+
     if (!post) {
       throw new Error('Không tìm thấy bài viết.');
     }
+
     for (let liker of post.likes) {
       if (liker.equals(user._id)) {
         isLike = true;
@@ -81,13 +86,13 @@ module.exports.get = async (req, res, next) => {
   }
 };
 
-module.exports.create = async (req, res, next) => {
+exports.create = async (req, res, next) => {
   const { files, user } = req;
   try {
     const fileUploaded = await Promise.all(
       files.map(({ path }) =>
-        cloudinary.uploader.upload(path, { transformation: [{ width: 1000 }] })
-      )
+        cloudinary.uploader.upload(path, { transformation: [{ width: 1000 }] }),
+      ),
     );
 
     const urlFileUploaded = fileUploaded.map(file => file.secure_url);
@@ -105,7 +110,7 @@ module.exports.create = async (req, res, next) => {
   }
 };
 
-module.exports.update = async (req, res, next) => {
+exports.update = async (req, res, next) => {
   const {
     user,
     body: { title, content, locations, categories, type },
@@ -132,7 +137,7 @@ module.exports.update = async (req, res, next) => {
   }
 };
 
-module.exports.like = async (req, res, next) => {
+exports.like = async (req, res, next) => {
   const {
     params: { id },
     user: { _id: userId },
@@ -157,13 +162,13 @@ module.exports.like = async (req, res, next) => {
       uploadedPost = await Post.findOneAndUpdate(
         { _id: id },
         { $pull: { likes: userId } },
-        { new: true }
+        { new: true },
       );
     } else {
       uploadedPost = await Post.findOneAndUpdate(
         { _id: id },
         { $push: { likes: userId } },
-        { new: true }
+        { new: true },
       );
     }
 
@@ -175,7 +180,7 @@ module.exports.like = async (req, res, next) => {
   }
 };
 
-module.exports.delete = async (req, res, next) => {
+exports.delete = async (req, res, next) => {
   const {
     params: { id },
     user,
@@ -183,7 +188,7 @@ module.exports.delete = async (req, res, next) => {
   try {
     const post = await Post.findOneAndUpdate(
       { _id: id, user },
-      { deletedAt: new Date() }
+      { deletedAt: new Date() },
     ).lean();
     if (!post) {
       throw new Error('Không tìm thấy bài viết.');
@@ -196,7 +201,7 @@ module.exports.delete = async (req, res, next) => {
   }
 };
 
-module.exports.getListComments = async (req, res, next) => {
+exports.getListComments = async (req, res, next) => {
   const {
     params: { id },
     limit,
@@ -218,14 +223,14 @@ module.exports.getListComments = async (req, res, next) => {
   }
 };
 
-module.exports.createComment = async (req, res, next) => {
+exports.createComment = async (req, res, next) => {
   const {
     body: { text },
     params: { id },
     user,
   } = req;
   try {
-    const post = await Post.findById(id);
+    const post = await Post.findById(id).lean();
     if (!post) {
       throw new Error('Không tìm thấy bài viết.');
     }
@@ -236,18 +241,24 @@ module.exports.createComment = async (req, res, next) => {
       post: id,
     });
 
+    !post.user.equals(user._id) &&
+      (await Notification.create({
+        user: post.user,
+        text: `${user.fullName.firstName} đã bình luận về bài viết của bạn.`,
+      }));
+
     return res.status(httpStatus.CREATED).json(comment);
   } catch (err) {
     next(err);
   }
 };
 
-module.exports.getHotPost = async (req, res, next) => {
+exports.getHotPost = async (req, res, next) => {
   try {
     const posts = await Post.find()
       .sort({ likes: -1 })
       .limit(10)
-      .lean(true);
+      .lean();
 
     return res.status(httpStatus.OK).json(posts);
   } catch (err) {

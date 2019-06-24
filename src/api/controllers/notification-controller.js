@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
 const Notification = require('../models/notification-model');
 
-module.exports.getAll = async (req, res, next) => {
+exports.getAll = async (req, res, next) => {
   const { user, skip, limit } = req;
   try {
     const notifications = await Notification.find({ user })
@@ -21,12 +21,13 @@ module.exports.getAll = async (req, res, next) => {
   }
 };
 
-module.exports.countUnread = async (req, res, next) => {
+exports.countUnread = async (req, res, next) => {
   try {
     const unreadQuantity = await Notification.count({
       user: req.user,
       isRead: false,
     });
+
     return res.status(httpStatus.OK).json({
       unreadQuantity,
     });
@@ -35,7 +36,7 @@ module.exports.countUnread = async (req, res, next) => {
   }
 };
 
-module.exports.markAsRead = async (req, res, next) => {
+exports.markAsRead = async (req, res, next) => {
   const {
     user,
     params: { id },
