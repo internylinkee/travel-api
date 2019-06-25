@@ -1,6 +1,11 @@
 const httpStatus = require('http-status');
 const User = require('../models/user-model');
 const Notification = require('../models/notification-model');
+const Post = require('../models/post-model');
+const Review = require('../models/review-model');
+const countCollection = require('../../utils/count-collection');
+
+require('../models/location-model');
 
 exports.getList = async (req, res, next) => {
   const {
@@ -28,6 +33,11 @@ exports.getList = async (req, res, next) => {
       .limit(limit)
       .lean();
 
+    await Promise.all([
+      countCollection(users, Post, 'user', 'totalPost'),
+      countCollection(users, Review, 'user', 'totalReview'),
+    ]);
+
     return res.status(httpStatus.OK).json(users);
   } catch (err) {
     next(err);
@@ -35,20 +45,24 @@ exports.getList = async (req, res, next) => {
 };
 
 exports.get = async (req, res, next) => {
+  const { _id } = req.user;
+  let isFollow = false;
+
   try {
-    const { _id } = req.user;
-    const user = await User.findById(req.params.id).lean();
+    const user = await User.findById(req.params.id)
+      .populate('tourGuideProfile.location')
+      .lean();
+
     if (!user) {
       throw new Error('User not found.');
     }
-
-    let isFollow = false;
 
     for (let _user of user.followers) {
       if (_user._id.equals(_id)) {
         isFollow = true;
       }
     }
+
     return res.status(httpStatus.OK).json({
       user,
       isFollow,
