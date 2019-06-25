@@ -5,7 +5,8 @@ module.exports = {
     query: {
       page: Joi.number()
         .integer()
-        .min(1),
+        .min(1)
+        .default(1),
       admin: Joi.boolean().default(false),
       tourGuide: Joi.boolean().default(false),
     },

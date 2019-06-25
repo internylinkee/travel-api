@@ -2,30 +2,42 @@ const httpStatus = require('http-status');
 const Post = require('../models/post-model');
 const Comment = require('../models/comment-model');
 const Notification = require('../models/notification-model');
+const countCollection = require('../../utils/count-collection');
 const cloudinary = require('../../config/cloudinary');
+require('../models/category-model');
 
 exports.getList = async (req, res, next) => {
+  const query = {};
+  let posts;
+
   const {
-    body: { location, category },
+    body: { location, category, user },
     query: { q },
     limit,
     skip,
   } = req;
 
-  const query = {};
-  let posts;
-  if (q) {
-    query.$or = [
-      { title: { $regex: q, $options: 'i' } },
-      { content: { $regex: q, $options: 'i' } },
-    ];
-  }
+  user ? (query.user = user) : '';
+  q
+    ? (query.$or = [
+        { title: { $regex: q, $options: 'i' } },
+        { content: { $regex: q, $options: 'i' } },
+      ])
+    : '';
 
   async function findPost(query) {
     return await Post.find(query)
       .skip(skip)
       .limit(limit)
-      .sort({ likes: -1 })
+      .populate([
+        {
+          path: 'user',
+          select: 'fullName avatar',
+        },
+        'categories',
+        'locations',
+      ])
+      .sort({ likes: -1, createdAt: -1 })
       .lean();
   }
 
@@ -50,6 +62,8 @@ exports.getList = async (req, res, next) => {
       });
     }
 
+    await countCollection(posts, Comment, 'post', 'commentCount');
+
     return res.json(posts);
   } catch (err) {
     next(err);
@@ -64,7 +78,9 @@ exports.get = async (req, res, next) => {
   let isLike = false;
 
   try {
-    const post = await Post.findById(id);
+    const post = await Post.findById(id)
+      .populate('categories locations user')
+      .lean();
 
     if (!post) {
       throw new Error('Không tìm thấy bài viết.');
@@ -144,10 +160,12 @@ exports.like = async (req, res, next) => {
   } = req;
   let isLike = false;
   let uploadedPost;
+
   try {
     const post = await Post.findById(id)
       .select('likes')
       .lean();
+
     if (!post) {
       throw new Error('Không tìm thấy bài viết.');
     }
@@ -190,9 +208,11 @@ exports.delete = async (req, res, next) => {
       { _id: id, user },
       { deletedAt: new Date() },
     ).lean();
+
     if (!post) {
       throw new Error('Không tìm thấy bài viết.');
     }
+
     return res.status(httpStatus.OK).json({
       message: 'Xoá bài viết thành công.',
     });
@@ -207,6 +227,7 @@ exports.getListComments = async (req, res, next) => {
     limit,
     skip,
   } = req;
+
   try {
     const comments = await Comment.find({ post: id })
       .skip(skip)
@@ -254,8 +275,10 @@ exports.createComment = async (req, res, next) => {
 };
 
 exports.getHotPost = async (req, res, next) => {
+  const query = req.body.user ? { user: req.body.user } : {};
+
   try {
-    const posts = await Post.find()
+    const posts = await Post.find(query)
       .sort({ likes: -1 })
       .limit(10)
       .lean();

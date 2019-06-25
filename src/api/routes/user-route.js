@@ -11,7 +11,7 @@ router
   .route('/')
   .get(
     validate(userValidations.getList),
-    authorize(ADMIN),
+    authorize(),
     paginate(),
     userControllers.getList,
   );
