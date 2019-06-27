@@ -7,72 +7,14 @@ const { paginate } = require('../middlewares/paginate');
 
 const router = express.Router();
 
-/**
- * @swagger
- *
- * definitions:
- *   User:
- *     type: object
- *     properties:
- *       _id:
- *         type: string
- *       roles:
- *         type: string
- *       followers:
- *         type: array
- *         items:
- *            type: string
- *            properties:
- *              name:
- *                type: string
- *       isTourGuide:
- *         type: boolean
- *       email:
- *         type: string
- *         format: email
- *       password:
- *         type: string
- *         format: password
- *       fullname:
- *         type: object
- *         properties:
- *           firstName:
- *             type: string
- *           lastname:
- *             type: string
- *       createdAt:
- *         type: string
- *         format: date
- *       updatedAt:
- *         type: string
- *         format: date
- *       tourGuideProfile:
- *         type: object
- *         properties:
- *            rating:
- *              type: number
- *            location:
- *              type: object
- *              properties:
- *                _id:
- *                  type: string
- *                name:
- *                  type: string
- *            reviewCount:
- *               type: number
- *            certificate:
- *               type: string
- *            introduction:
- *               type: string
- *
- */
-
 router
   .route('/')
   /**
    * @swagger
    * /users:
    *  get:
+   *    security:
+   *    - bearerAuth: []
    *    tags:
    *    - User
    *    summary: Get list of users
@@ -81,7 +23,6 @@ router
    *    - in: query
    *      name: page
    *      description: Index of the page
-   *      type: integer
    *      schema:
    *        type: integer
    *        mininum: 1
@@ -89,33 +30,33 @@ router
    *    - in: query
    *      name: admin
    *      description: Select users is admin
-   *      type: boolean
    *      schema:
    *        type: boolean
    *      default: false
    *    - in: query
    *      name: tourGuide
-   *      type: boolean
    *      description: Select user is tour guide
    *      schema:
    *        type: boolean
    *      default: false
    *    - in: query
    *      name: q
-   *      description: Select user by user's name
-   *      type: string
-   *    - in: header
-   *      name: Authorization
-   *      type: string
-   *      default: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmdWxsTmFtZSI6eyJmaXJzdE5hbWUiOiJNaW50IiwibGFzdE5hbWUiOiJOZ28ifSwicm9sZSI6InVzZXIiLCJmb2xsb3dlcnMiOltdLCJpc1RvdXJHdWlkZSI6ZmFsc2UsIl9pZCI6IjVkMTAyZGM2ZjgyYjIxMGE3YTBmOTM3YiIsImVtYWlsIjoiYWJjMTIzQGdtYWlsLmNvbSIsImNyZWF0ZWRBdCI6IjIwMTktMDYtMjRUMDE6NTY6MjIuMzYwWiIsInVwZGF0ZWRBdCI6IjIwMTktMDYtMjRUMDI6MDg6NDAuMDc1WiIsIl9fdiI6MCwiaWF0IjoxNTYxMzQ1NDQ3LCJleHAiOjE1NjEzODg2NDd9.8fRfwwq7K0Nb7hhA70Kjle8rHgXfA4M34Yx-DnuH_uE
+   *      description: Select user is tour guide
+   *      schema:
+   *        type: string
+   *
    *    responses:
    *      200:
    *        description: OK
-   *        schema:
-   *          type: array
-   *          items:
-   *            type: object
-   *            $ref: '#/definitions/User'
+   *        content:
+   *          application/json:
+   *            schema:
+   *              type: array
+   *              items:
+   *                type: object
+   *                $ref: '#/components/User'
+   *      400:
+   *        description: Bad request
    *      401:
    *        description: No auth token
    *        schema:
@@ -141,6 +82,8 @@ router
    * @swagger
    * /users/{id}:
    *   get:
+   *     security:
+   *     - bearerAuth: []
    *     tags:
    *     - User
    *     summary: Get user by id
@@ -148,56 +91,59 @@ router
    *     parameters:
    *     - in: path
    *       name: id
+   *       description: The user's id
    *       required: true
-   *       description: User id
-   *       default: 5d102dc6f82b210a7a0f937b
-   *     - in: header
-   *       name: Authorization
-   *       required: true
-   *       description: Access token
-   *       default: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmdWxsTmFtZSI6eyJmaXJzdE5hbWUiOiJNaW50IiwibGFzdE5hbWUiOiJOZ28ifSwicm9sZSI6InVzZXIiLCJmb2xsb3dlcnMiOltdLCJpc1RvdXJHdWlkZSI6ZmFsc2UsIl9pZCI6IjVkMTAyZGM2ZjgyYjIxMGE3YTBmOTM3YiIsImVtYWlsIjoiYWJjMTIzQGdtYWlsLmNvbSIsImNyZWF0ZWRBdCI6IjIwMTktMDYtMjRUMDE6NTY6MjIuMzYwWiIsInVwZGF0ZWRBdCI6IjIwMTktMDYtMjRUMDI6MDg6NDAuMDc1WiIsIl9fdiI6MCwiaWF0IjoxNTYxMzQ1NDQ3LCJleHAiOjE1NjEzODg2NDd9.8fRfwwq7K0Nb7hhA70Kjle8rHgXfA4M34Yx-DnuH_uE
-   *     produces:
-   *      - application/json
+   *       schema:
+   *        type: string
+   *        example: 5d119813f7d5360bf6100c22
    *     responses:
    *       200:
    *         description: The info of user
-   *         schema:
-   *           type: object
-   *           properties:
-   *             users:
-   *               $ref: '#/definitions/User'
-   *             isFollow:
-   *               type: boolean
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 users:
+   *                   $ref: '#/components/User'
+   *                 isFollow:
+   *                   type: boolean
    *       400:
    *         description: The id must be a objectId
    *       401:
    *         description: No auth token
-   *         schema:
-   *          type: object
-   *          properties:
-   *            status:
-   *              type: interger
-   *              example: 401
-   *            message:
-   *              type: string
-   *              example: No auth token
+   *         content:
+   *           application/json:
+   *              schema:
+   *                type: object
+   *                properties:
+   *                  status:
+   *                    type: interger
+   *                    example: 401
+   *                  message:
+   *                    type: string
+   *                    example: No auth token
    *       404:
    *         description: Not found
-   *         schema:
-   *           type: object
-   *           properties:
-   *            status:
-   *              type: interger
-   *              example: 404
-   *            message:
-   *              type: string
-   *              example: User not found.
+   *         content:
+   *           application/json:
+   *              schema:
+   *                type: object
+   *                properties:
+   *                  status:
+   *                    type: interger
+   *                    example: 404
+   *                  message:
+   *                    type: string
+   *                    example: User not found.
    */
   .get(validate(userValidations.get), authorize(), userControllers.get)
   /**
    * @swagger
    * /users/{id}:
    *   put:
+   *     security:
+   *     - bearerAuth: []
    *     tags:
    *     - User
    *     summary: Update user
@@ -207,68 +153,72 @@ router
    *       name: id
    *       required: true
    *       description: User id
-   *       default: 5d102dc6f82b210a7a0f937b
-   *     - in: header
-   *       name: Authorization
-   *       required: true
-   *       description: The access token
-   *       default: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmdWxsTmFtZSI6eyJmaXJzdE5hbWUiOiJNaW50IiwibGFzdE5hbWUiOiJOZ28ifSwicm9sZSI6InVzZXIiLCJmb2xsb3dlcnMiOltdLCJpc1RvdXJHdWlkZSI6ZmFsc2UsIl9pZCI6IjVkMTAyZGM2ZjgyYjIxMGE3YTBmOTM3YiIsImVtYWlsIjoiYWJjMTIzQGdtYWlsLmNvbSIsImNyZWF0ZWRBdCI6IjIwMTktMDYtMjRUMDE6NTY6MjIuMzYwWiIsInVwZGF0ZWRBdCI6IjIwMTktMDYtMjRUMDI6MDg6NDAuMDc1WiIsIl9fdiI6MCwiaWF0IjoxNTYxMzQ1NDQ3LCJleHAiOjE1NjEzODg2NDd9.8fRfwwq7K0Nb7hhA70Kjle8rHgXfA4M34Yx-DnuH_uE
-   *     - in: body
-   *       name: body
-   *       required: true
    *       schema:
-   *         type: object
-   *         properties:
-   *           firstName:
-   *             type: string
-   *           lastName:
-   *             type: string
-   *           facebookUrl:
-   *             type: string
-   *           phone:
-   *             type: string
-   *           location:
-   *             type: string
-   *           certificate:
-   *             type: string
-   *           introduction:
-   *             type: string
-   *     produces:
-   *     - application/json
+   *         type: string
+   *     requestBody:
+   *        description: The info to update user
+   *        required: true
+   *        content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                firstName:
+   *                  type: string
+   *                lastName:
+   *                  type: string
+   *                facebookUrl:
+   *                  type: string
+   *                phone:
+   *                  type: string
+   *                location:
+   *                  type: string
+   *                certificate:
+   *                  type: string
+   *                introduction:
+   *                  type: string
    *     responses:
    *       200:
    *         description: OK
-   *         schema:
-   *           type: object
-   *           $ref: '#/definitions/User'
+   *         content:
+   *            application/json:
+   *              schema:
+   *                type: object
+   *                $ref: '#/components/User'
    *       400:
    *         description: Bad request
-   *         schema:
-   *           type: object
-   *           properties:
-   *             status:
-   *               type: interger
-   *               example: 400
-   *             message:
-   *               type: string
-   *               example: Bạn không thể cập nhật thông tin của người dùng khác.
+   *         content:
+   *            application/json:
+   *              schema:
+   *                type: object
+   *                properties:
+   *                  status:
+   *                    type: interger
+   *                    example: 400
+   *                  message:
+   *                    type: string
+   *                    example: Bạn không thể cập nhật thông tin của người dùng khác.
    *       401:
    *         description: No auth token
-   *         schema:
-   *          type: object
-   *          properties:
-   *            status:
-   *              type: interger
-   *              example: 401
-   *            message:
-   *              type: string
-   *              example: No auth token
+   *         content:
+   *            application/json:
+   *              schema:
+   *                type: object
+   *                properties:
+   *                  status:
+   *                    type: interger
+   *                    example: 401
+   *                  message:
+   *                    type: string
+   *                    example: No auth token
    */
   .put(validate(userValidations.update), authorize(), userControllers.update)
   /**
    * @swagger
    * /users/{id}:
    *  delete:
+   *    security:
+   *    - bearerAuth: []
    *    tags:
    *    - User
    *    summary: Delete a user
@@ -278,45 +228,41 @@ router
    *      name: id
    *      required: true
    *      description: User id
-   *      default: 5d102dc6f82b210a7a0f937b
-   *    - in: headers
-   *      name: Authorization
-   *      required: true
-   *      description: The access token
-   *      default: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmdWxsTmFtZSI6eyJmaXJzdE5hbWUiOiJNaW50IiwibGFzdE5hbWUiOiJOZ28ifSwicm9sZSI6InVzZXIiLCJmb2xsb3dlcnMiOltdLCJpc1RvdXJHdWlkZSI6ZmFsc2UsIl9pZCI6IjVkMTAyZGM2ZjgyYjIxMGE3YTBmOTM3YiIsImVtYWlsIjoiYWJjMTIzQGdtYWlsLmNvbSIsImNyZWF0ZWRBdCI6IjIwMTktMDYtMjRUMDE6NTY6MjIuMzYwWiIsInVwZGF0ZWRBdCI6IjIwMTktMDYtMjRUMDI6MDg6NDAuMDc1WiIsIl9fdiI6MCwiaWF0IjoxNTYxMzQ1NDQ3LCJleHAiOjE1NjEzODg2NDd9.8fRfwwq7K0Nb7hhA70Kjle8rHgXfA4M34Yx-DnuH_uE
-   *    produces:
-   *    - application/json
+   *      schema:
+   *        type: string
+   *        example: 5d102dc6f82b210a7a0f937b
    *    responses:
    *      200:
    *        description: OK
-   *        schema:
-   *          type: object
-   *          properties:
-   *            message:
-   *              type: string
-   *              example: 'Đã xoá thành công'
+   *        content:
+   *          application/json:
+   *             schema:
+   *                type: object
+   *                properties:
+   *                  message:
+   *                    type: string
+   *                    example: 'Đã xoá thành công'
    *      400:
    *        description: Bad request
-   *        schema:
-   *          type: object
-   *          properties:
-   *            status:
-   *              type: interger
-   *              example: 400
-   *            message:
-   *              type: string
-   *              example: Không thể xoá tài khoản là chính bạn.
+   *        content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                status:
+   *                  type: interger
+   *                  example: 400
+   *                message:
+   *                  type: string
+   *                  example: Không thể xoá tài khoản là chính bạn.
    *      401:
    *        description: No auth token
-   *        schema:
-   *          type: object
-   *          properties:
-   *            status:
-   *              type: interger
-   *              example: 401
-   *            message:
-   *              type: string
-   *              example: No auth token
+   *        content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              $ref: '#/components/noAuthToken'
+        
    */
   .delete(
     validate(userValidations.delete),
@@ -330,6 +276,8 @@ router
    * @swagger
    * /users/{id}/follow:
    *  put:
+   *    security:
+   *    - bearerAuth: []
    *    tags:
    *    - User
    *    summary: Follow-unfollow a user
@@ -339,40 +287,39 @@ router
    *      name: id
    *      required: true
    *      description: User id
-   *    - in: header
-   *      name: Authorization
-   *      required: true
-   *      description: Access token
+   *      schema:
+   *        type: integer
+   *        example: 5d119813f7d5360bf6100c22
    *    responses:
    *      200:
    *        description: OK
-   *        schema:
-   *          type: object
-   *          properties:
-   *            likeCount:
-   *              type: number
+   *        content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                likeCount:
+   *                  type: number
    *      400:
    *        description: Bad request
-   *        schema:
-   *          type: object
-   *          properties:
-   *            status:
-   *              type: interger
-   *              example: 400
-   *            message:
-   *              type: string
-   *              example: User not found.
+   *        content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              properties:
+   *                status:
+   *                  type: interger
+   *                  example: 400
+   *                message:
+   *                  type: string
+   *                  example: User not found.
    *      401:
    *        description: No auth token
-   *        schema:
-   *          type: object
-   *          properties:
-   *            status:
-   *              type: interger
-   *              example: 401
-   *            message:
-   *              type: string
-   *              example: No auth token
+   *        content:
+   *          application/json:
+   *            schema:
+   *              type: object
+   *              $ref: '#/components/noAuthToken'
    */
   .put(validate(userValidations.follow), authorize(), userControllers.follow);
 

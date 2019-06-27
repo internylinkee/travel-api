@@ -13,12 +13,7 @@ const router = express.Router();
 
 router
   .route('/')
-  .get(
-    validate(postValidations.getList),
-    paginate(),
-    authorize(),
-    postControllers.getList,
-  )
+  .get(validate(postValidations.getList), paginate(), postControllers.getList)
   .post(
     upload.array('images', 10),
     validate(postValidations.create),

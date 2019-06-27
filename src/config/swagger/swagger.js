@@ -1,19 +1,10 @@
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsDoc = require('swagger-jsdoc');
-const swaggerDefinition = {
-  info: {
-    title: 'Travel Swagger API',
-    version: '1.0.0',
-    description: 'This is usage APIs.',
-  },
-  host: `localhost:3000`,
-  basePath: '/v1',
-  schemes: ['http'],
-  paths: {},
-};
+const swaggerDefinition = require('./swagger.json');
+
 const swaggerOptions = {
   swaggerDefinition: swaggerDefinition,
-  tags: ['User'],
+  tags: ['User', 'Auth'],
   apis: [
     './src/api/routes/user******.js',
     './src/api/routes/review******.js',

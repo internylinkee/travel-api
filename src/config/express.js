@@ -3,7 +3,7 @@ const cors = require('cors');
 const logger = require('morgan');
 const helmet = require('helmet');
 const expressValidation = require('express-validation');
-const swagger = require('./swagger');
+const swagger = require('./swagger/swagger');
 const { logs } = require('./vars');
 
 const routes = require('../api/routes');
