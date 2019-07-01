@@ -54,7 +54,7 @@ router
    *              type: array
    *              items:
    *                type: object
-   *                $ref: '#/components/User'
+   *                $ref: '#/components/schemas/User'
    *      400:
    *        description: Bad request
    *      401:
@@ -105,7 +105,7 @@ router
    *               type: object
    *               properties:
    *                 users:
-   *                   $ref: '#/components/User'
+   *                   $ref: '#/components/schemas/User'
    *                 isFollow:
    *                   type: boolean
    *       400:
@@ -184,7 +184,7 @@ router
    *            application/json:
    *              schema:
    *                type: object
-   *                $ref: '#/components/User'
+   *                $ref: '#/components/schemas/User'
    *       400:
    *         description: Bad request
    *         content:
@@ -261,7 +261,7 @@ router
    *          application/json:
    *            schema:
    *              type: object
-   *              $ref: '#/components/noAuthToken'
+   *              $ref: '#/components/schemas/noAuthToken'
         
    */
   .delete(
@@ -319,7 +319,7 @@ router
    *          application/json:
    *            schema:
    *              type: object
-   *              $ref: '#/components/noAuthToken'
+   *              $ref: '#/components/schemas/noAuthToken'
    */
   .put(validate(userValidations.follow), authorize(), userControllers.follow);
 

@@ -4,9 +4,10 @@ const swaggerDefinition = require('./swagger.json');
 
 const swaggerOptions = {
   swaggerDefinition: swaggerDefinition,
-  tags: ['User', 'Auth'],
+  tags: ['User', 'Auth', 'Post'],
   apis: [
     './src/api/routes/user******.js',
+    './src/api/routes/post******.js',
     './src/api/routes/review******.js',
     './src/api/routes/auth******.js',
   ],

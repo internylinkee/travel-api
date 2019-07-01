@@ -2,9 +2,17 @@ const Joi = require('joi');
 
 module.exports = {
   getList: {
-    body: {
+    query: {
       category: Joi.string().regex(/^[0-9a-fA-F]{24}$/),
       location: Joi.string().regex(/^[0-9a-fA-F]{24}$/),
+      user: Joi.string().regex(/^[0-9a-fA-F]{24}$/),
+      page: Joi.number()
+        .integer()
+        .min(1)
+        .default(1),
+      q: Joi.string()
+        .min(2)
+        .max(255),
     },
   },
   get: {

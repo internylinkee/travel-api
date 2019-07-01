@@ -40,7 +40,7 @@ const router = express.Router();
  *              properties:
  *                user:
  *                  type: object
- *                  $ref: '#/components/User'
+ *                  $ref: '#/components/schemas/User'
  *                accessToken:
  *                  type: string
  *      400:
@@ -81,7 +81,7 @@ router.post('/register', validate(register), authController.register);
  *              properties:
  *                user:
  *                  type: object
- *                  $ref: '#/components/User'
+ *                  $ref: '#/components/schemas/User'
  *                accessToken:
  *                  type: string
  *      400:

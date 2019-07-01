@@ -36,82 +36,167 @@
         }
       }
     },
-    "User": {
-      "type": "object",
-      "properties": {
-        "_id": {
-          "type": "string"
-        },
-        "roles": {
-          "type": "string"
-        },
-        "followers": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "properties": {
-              "name": {
-                "type": "string"
-              }
-            }
-          }
-        },
-        "isTourGuide": {
-          "type": "boolean"
-        },
-        "email": {
-          "type": "string",
-          "format": "email"
-        },
-        "password": {
-          "type": "string",
-          "format": "password"
-        },
-        "fullname": {
-          "type": "object",
-          "properties": {
-            "firstName": {
-              "type": "string"
-            },
-            "lastname": {
-              "type": "string"
-            }
-          }
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date"
-        },
-        "updatedAt": {
-          "type": "string",
-          "format": "date"
-        },
-        "tourGuideProfile": {
-          "type": "object",
-          "properties": {
-            "rating": {
-              "type": "number"
-            },
-            "location": {
-              "type": "object",
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string"
+          },
+          "roles": {
+            "type": "string"
+          },
+          "followers": {
+            "type": "array",
+            "items": {
+              "type": "string",
               "properties": {
-                "_id": {
-                  "type": "string"
-                },
                 "name": {
                   "type": "string"
                 }
               }
-            },
-            "reviewCount": {
-              "type": "number"
-            },
-            "certificate": {
-              "type": "string"
-            },
-            "introduction": {
+            }
+          },
+          "isTourGuide": {
+            "type": "boolean"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "format": "password"
+          },
+          "fullname": {
+            "type": "object",
+            "properties": {
+              "firstName": {
+                "type": "string"
+              },
+              "lastname": {
+                "type": "string"
+              }
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date"
+          },
+          "tourGuideProfile": {
+            "type": "object",
+            "properties": {
+              "rating": {
+                "type": "number"
+              },
+              "location": {
+                "type": "object",
+                "properties": {
+                  "_id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "reviewCount": {
+                "type": "number"
+              },
+              "certificate": {
+                "type": "string"
+              },
+              "introduction": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "Post": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string"
+          },
+          "user": {
+            "type": "object",
+            "properties": {
+              "fullName": {
+                "type": "object",
+                "properties": {
+                  "lastname": {
+                    "type": "string"
+                  },
+                  "firstName": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "featureImage": {
+            "type": "string"
+          },
+          "images": {
+            "type": "array",
+            "items": {
               "type": "string"
             }
+          },
+          "likes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "shares": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "locations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "review",
+              "question"
+            ]
+          },
+          "commentCount": {
+            "type": "number"
           }
         }
       }
