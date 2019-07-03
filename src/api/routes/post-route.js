@@ -148,7 +148,8 @@ router
  *              schema:
  *                type: array
  *                items:
- *                  $ref: '#/commponents/schemas/Post'
+ *                  type: object
+ *                  $ref: '#/components/schemas/Post'
  *
  */
 router.route('/hot').get(postControllers.getHotPost);
