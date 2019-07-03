@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://travel-internship.herokuapp.com"
+      "url": "https://travel-internship.herokuapp.com/v1"
     }
   ],
   "schemes": [
