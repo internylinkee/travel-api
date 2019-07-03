@@ -5,11 +5,6 @@
     "version": "1.0.0",
     "description": "This is usage APIs."
   },
-  "servers": [
-    {
-      "url": "https://travel-internship.herokuapp.com/v1"
-    }
-  ],
   "schemes": [
     "http"
   ],
