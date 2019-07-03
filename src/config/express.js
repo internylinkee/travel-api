@@ -3,6 +3,7 @@ const cors = require('cors');
 const logger = require('morgan');
 const helmet = require('helmet');
 const expressValidation = require('express-validation');
+const swagger = require('./swagger/swagger');
 const { logs } = require('./vars');
 
 const routes = require('../api/routes');
@@ -11,6 +12,8 @@ const passport = require('passport');
 const strategies = require('./passport');
 
 const app = express();
+
+swagger(app);
 
 app.use(logger(logs));
 app.use(helmet());

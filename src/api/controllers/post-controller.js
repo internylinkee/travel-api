@@ -11,8 +11,7 @@ exports.getList = async (req, res, next) => {
   let posts;
 
   const {
-    body: { location, category, user },
-    query: { q },
+    query: { q, location, category, user },
     limit,
     skip,
   } = req;
@@ -86,10 +85,12 @@ exports.get = async (req, res, next) => {
       throw new Error('Không tìm thấy bài viết.');
     }
 
-    for (let liker of post.likes) {
-      if (liker.equals(user._id)) {
-        isLike = true;
-        break;
+    if (user) {
+      for (let liker of post.likes) {
+        if (liker.equals(user._id)) {
+          isLike = true;
+          break;
+        }
       }
     }
 
