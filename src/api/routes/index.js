@@ -7,6 +7,8 @@ const postRoutes = require('./post-route');
 const commentRoutes = require('./comment-route');
 const reviewRoutes = require('./review-route');
 const notifyRoutes = require('./notification-route');
+const locationRoutes = require('./location-route');
+const categoryRoutes = require('./category-route');
 
 const router = express.Router();
 
@@ -17,5 +19,7 @@ router.use('/posts', postRoutes);
 router.use('/comments', commentRoutes);
 router.use('/reviews', reviewRoutes);
 router.use('/notifications', notifyRoutes);
+router.use('/locations', locationRoutes);
+router.use('/categories', categoryRoutes);
 
 module.exports = router;
