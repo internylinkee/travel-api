@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/immint023/travel-internship-api#readme",
   "dependencies": {
+    "axios": "^0.19.0",
     "bcrypt": "^3.0.6",
     "cors": "^2.8.5",
     "dotenv": "^8.0.0",
