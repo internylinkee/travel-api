@@ -1,3 +1,4 @@
+#!/bin/bash
 const mongoose = require('../config/mongoose');
 const Category = require('../api/models/category-model');
 

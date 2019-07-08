@@ -1,3 +1,4 @@
+#!/bin/bash
 const mongoose = require('../config/mongoose');
 const axios = require('axios');
 const Location = require('../api/models/location-model');
