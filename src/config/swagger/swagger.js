@@ -2,6 +2,8 @@ require('dotenv').config();
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerDefinition = require('./swagger.json');
+const { readdirSync } = require('fs');
+const { resolve } = require('path');
 const appDomain = process.env.APP_DOMAIN;
 
 swaggerDefinition.servers = [
@@ -10,15 +12,14 @@ swaggerDefinition.servers = [
   },
 ];
 
+const routePaths = readdirSync(resolve('src/api/routes')).map(
+  item => `./src/api/routes/${item}`,
+);
+
 const swaggerOptions = {
   swaggerDefinition: swaggerDefinition,
-  tags: ['User', 'Auth', 'Post'],
-  apis: [
-    './src/api/routes/user******.js',
-    './src/api/routes/post******.js',
-    './src/api/routes/review******.js',
-    './src/api/routes/auth******.js',
-  ],
+  tags: ['User', 'Auth', 'Post', 'Category', 'Location'],
+  apis: routePaths,
 };
 
 const specs = swaggerJsDoc(swaggerOptions);
