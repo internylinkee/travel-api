@@ -6,8 +6,7 @@ const { authorize } = require('../middlewares/auth');
 const { paginate } = require('../middlewares/paginate');
 
 const multer = require('multer');
-const storage = multer.diskStorage({});
-const upload = multer({ storage });
+const upload = multer({ dest: 'public/uploads/' });
 
 const router = express.Router();
 

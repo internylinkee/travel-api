@@ -3,7 +3,8 @@ const Post = require('../models/post-model');
 const Comment = require('../models/comment-model');
 const Notification = require('../models/notification-model');
 const countCollection = require('../../utils/count-collection');
-const cloudinary = require('../../config/cloudinary');
+const imagemin = require('imagemin');
+const imageminPngquant = require('imagemin-pngquant');
 require('../models/category-model');
 
 exports.getList = async (req, res, next) => {
@@ -105,14 +106,23 @@ exports.get = async (req, res, next) => {
 
 exports.create = async (req, res, next) => {
   const { files, user } = req;
+  const appDomain = process.env.APP_DOMAIN
+    ? process.env.APP_DOMAIN
+    : 'http://localhost:3000';
   try {
-    const fileUploaded = await Promise.all(
-      files.map(({ path }) =>
-        cloudinary.uploader.upload(path, { transformation: [{ width: 1000 }] }),
-      ),
-    );
+    const pathFiles = files.map(file => file.path);
+    const compressedFiles = await imagemin(pathFiles, {
+      destination: 'public/uploads',
+      plugins: [imageminPngquant()],
+    });
 
-    const urlFileUploaded = fileUploaded.map(file => file.secure_url);
+    const urlFileUploaded = compressedFiles.map(
+      file =>
+        `${appDomain}/${file.destinationPath
+          .split('/')
+          .slice(1)
+          .join('/')}`,
+    );
 
     const post = await Post.create({
       ...req.body,
