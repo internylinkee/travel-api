@@ -261,7 +261,7 @@ router
    *          application/json:
    *            schema:
    *              type: object
-   *              $ref: '#/components/schemas/noAuthToken'
+   *              $ref: '#/components/noAuthToken'
         
    */
   .delete(
@@ -319,7 +319,7 @@ router
    *          application/json:
    *            schema:
    *              type: object
-   *              $ref: '#/components/schemas/noAuthToken'
+   *              $ref: '#/components/noAuthToken'
    */
   .put(validate(userValidations.follow), authorize(), userControllers.follow);
 
