@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const REVIEW = 'review';
 const QUESTION = 'question';
+const TOUR = 'tour';
 
 const typeEnum = [REVIEW, QUESTION];
 
@@ -13,6 +14,7 @@ const postSchema = new mongoose.Schema(
     },
     title: String,
     content: String,
+    description: String,
     featureImage: String,
     images: [String],
     likes: [

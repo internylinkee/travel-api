@@ -42,6 +42,9 @@ module.exports = {
         .min(2)
         .max(255)
         .required(),
+      description: Joi.string()
+        .min(2)
+        .max(255),
     },
   },
   update: {

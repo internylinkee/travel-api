@@ -103,7 +103,7 @@ router
    *                  type:
    *                    type: string
    *                    description: The kind of the post
-   *                    enum: ['review', 'question']
+   *                    enum: ['review', 'question', 'tour']
    *              encoding:
    *                locations:
    *                  contentType: application/json

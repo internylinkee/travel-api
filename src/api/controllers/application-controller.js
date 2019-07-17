@@ -22,6 +22,7 @@ exports.getList = async (req, res, next) => {
 
   try {
     const applications = await Application.find(query)
+      .populate('user location')
       .skip(skip)
       .limit(limit)
       .lean();
@@ -40,7 +41,7 @@ exports.get = async (req, res, next) => {
 
   try {
     const application = await Application.findOne(query)
-      .populate('user')
+      .populate('user location')
       .lean();
 
     return application

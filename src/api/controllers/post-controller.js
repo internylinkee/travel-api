@@ -140,7 +140,7 @@ exports.create = async (req, res, next) => {
 exports.update = async (req, res, next) => {
   const {
     user,
-    body: { title, content, locations, categories, type },
+    body: { title, content, locations, categories, type, description },
     params: { id },
   } = req;
   try {
@@ -154,6 +154,7 @@ exports.update = async (req, res, next) => {
       content: content || post.content,
       locations: locations || post.locations,
       categories: categories || post.categories,
+      description: description || post.description,
       type: type || post.type,
     });
     await post.save();

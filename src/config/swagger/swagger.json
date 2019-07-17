@@ -32,6 +32,26 @@
       }
     },
     "schemas": {
+      "Application": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "certificate": {
+            "type": "string"
+          },
+          "introduction": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      },
       "Location": {
         "type": "object",
         "properties": {

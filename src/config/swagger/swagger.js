@@ -18,7 +18,7 @@ const routePaths = readdirSync(resolve('src/api/routes')).map(
 
 const swaggerOptions = {
   swaggerDefinition: swaggerDefinition,
-  tags: ['User', 'Auth', 'Post', 'Category', 'Location'],
+  tags: ['User', 'Auth', 'Post', 'Category', 'Location', 'Application'],
   apis: routePaths,
 };
 
