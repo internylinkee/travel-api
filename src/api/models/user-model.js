@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema(
     password: String,
     avatar: {
       type: String,
-      default: `https://api.adorable.io/avatars/${Math.random()}`,
+      default: `https://avatars.dicebear.com/v2/avataaars/${Math.random}.svg`,
     },
     facebookUrl: String,
     facebookId: String,
