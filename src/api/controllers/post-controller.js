@@ -287,7 +287,7 @@ exports.createComment = async (req, res, next) => {
 };
 
 exports.getHotPost = async (req, res, next) => {
-  const query = req.body.user ? { user: req.body.user } : {};
+  const query = req.query.user ? { user: req.query.user } : {};
 
   try {
     const posts = await Post.find(query)

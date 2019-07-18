@@ -139,6 +139,12 @@ router
  *      - Post
  *      summary: Get a list of hit posts
  *      description: Get top 10 hit posts
+ *      parameters:
+ *      - in: query
+ *        name: user
+ *        descriptiom: user id
+ *        schema:
+ *          type: string
  *      responses:
  *        200:
  *          description: OK
