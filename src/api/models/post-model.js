@@ -4,7 +4,7 @@ const REVIEW = 'review';
 const QUESTION = 'question';
 const TOUR = 'tour';
 
-const typeEnum = [REVIEW, QUESTION];
+const typeEnum = [REVIEW, QUESTION, TOUR];
 
 const postSchema = new mongoose.Schema(
   {

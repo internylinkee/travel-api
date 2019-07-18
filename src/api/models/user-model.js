@@ -18,7 +18,10 @@ const userSchema = new mongoose.Schema(
       unique: true,
     },
     password: String,
-    avatar: String,
+    avatar: {
+      type: String,
+      default: `https://api.adorable.io/avatars/${Math.random()}`,
+    },
     facebookUrl: String,
     facebookId: String,
     phone: String,
@@ -46,7 +49,7 @@ const userSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 userSchema.statics = {
@@ -63,7 +66,7 @@ userSchema.statics = {
 
       const isCorrectPassword = await bcrypt.compare(
         password,
-        user._doc.password
+        user._doc.password,
       );
       if (!isCorrectPassword) {
         throw new Error('Email or password is not correct.');
@@ -74,7 +77,7 @@ userSchema.statics = {
         process.env.JWT_SECRET,
         {
           expiresIn: process.env.JWT_EXPIRATION,
-        }
+        },
       );
       return { user, accessToken };
     } catch (err) {
