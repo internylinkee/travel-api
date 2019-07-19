@@ -3,8 +3,6 @@ const Post = require('../models/post-model');
 const Comment = require('../models/comment-model');
 const Notification = require('../models/notification-model');
 const countCollection = require('../../utils/count-collection');
-const imagemin = require('imagemin');
-const imageminPngquant = require('imagemin-pngquant');
 require('../models/category-model');
 
 exports.getList = async (req, res, next) => {
@@ -12,12 +10,14 @@ exports.getList = async (req, res, next) => {
   let posts;
 
   const {
-    query: { q, location, category, user },
+    query: { q, location, category, user, type },
     limit,
     skip,
   } = req;
 
   user ? (query.user = user) : '';
+  type ? (query.type = type) : '';
+
   q
     ? (query.$or = [
         { title: { $regex: q, $options: 'i' } },
@@ -105,25 +105,12 @@ exports.get = async (req, res, next) => {
 };
 
 exports.create = async (req, res, next) => {
-  const { files, user } = req;
-  const appDomain = process.env.APP_DOMAIN
-    ? process.env.APP_DOMAIN
-    : 'http://localhost:3000';
+  const {
+    body: { imageUrls: urlFileUploaded },
+    user,
+  } = req;
+
   try {
-    const pathFiles = files.map(file => file.path);
-    const compressedFiles = await imagemin(pathFiles, {
-      destination: 'public/uploads',
-      plugins: [imageminPngquant()],
-    });
-
-    const urlFileUploaded = compressedFiles.map(
-      file =>
-        `${appDomain}/${file.destinationPath
-          .split('/')
-          .slice(1)
-          .join('/')}`,
-    );
-
     const post = await Post.create({
       ...req.body,
       user,
@@ -140,7 +127,15 @@ exports.create = async (req, res, next) => {
 exports.update = async (req, res, next) => {
   const {
     user,
-    body: { title, content, locations, categories, type, description },
+    body: {
+      title,
+      content,
+      locations,
+      categories,
+      type,
+      description,
+      imageUrls,
+    },
     params: { id },
   } = req;
   try {
@@ -156,6 +151,8 @@ exports.update = async (req, res, next) => {
       categories: categories || post.categories,
       description: description || post.description,
       type: type || post.type,
+      images: imageUrls || post.images,
+      featureImage: imageUrls[0] || post.featureImage,
     });
     await post.save();
 

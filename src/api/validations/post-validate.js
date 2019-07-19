@@ -13,6 +13,9 @@ module.exports = {
       q: Joi.string()
         .min(2)
         .max(255),
+      type: Joi.string()
+        .min(2)
+        .max(255),
     },
   },
   get: {
@@ -45,6 +48,7 @@ module.exports = {
       description: Joi.string()
         .min(2)
         .max(255),
+      imageUrls: Joi.array().items(Joi.string()),
     },
   },
   update: {
@@ -60,6 +64,7 @@ module.exports = {
       type: Joi.string()
         .min(2)
         .max(255),
+      imageUrls: Joi.array().items(Joi.string()),
     },
   },
   like: {

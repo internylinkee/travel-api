@@ -1,37 +1,7 @@
 const httpStatus = require('http-status');
 const Application = require('../models/appilication-model');
-const Notification = require('../models/notification-model');
-const {
-  STATUS_PENDING,
-  STATUS_CONFIRMED,
-  STATUS_CANCEL,
-} = require('../models/appilication-model');
+const { STATUS_CANCEL } = require('../models/appilication-model');
 const { ADMIN } = require('../models/user-model');
-
-exports.getList = async (req, res, next) => {
-  const {
-    query: { q },
-    skip,
-    limit,
-  } = req;
-
-  const query = {};
-  if (q) {
-    query.status = q;
-  }
-
-  try {
-    const applications = await Application.find(query)
-      .populate('user location')
-      .skip(skip)
-      .limit(limit)
-      .lean();
-
-    return res.status(httpStatus.OK).json(applications);
-  } catch (err) {
-    next(err);
-  }
-};
 
 exports.get = async (req, res, next) => {
   const query =
@@ -73,38 +43,6 @@ exports.create = async (req, res, next) => {
     });
 
     return res.status(httpStatus.CREATED).json(application);
-  } catch (err) {
-    next(err);
-  }
-};
-
-exports.cancel = async (req, res, next) => {
-  try {
-    const application = await Application.findById(req.params.id);
-
-    if (!application) {
-      throw new Error('Không tìm thấy đơn yêu cầu.');
-    }
-
-    if (application.status === STATUS_CANCEL) {
-      throw new Error('Bạn đã huỷ đơn yêu cầu.');
-    }
-
-    if (application.status === STATUS_CONFIRMED) {
-      throw new Error('Bạn không thể huỷ đơn yêu cầu đã được xác nhận.');
-    }
-
-    application.status = STATUS_CANCEL;
-    await application.save();
-
-    await Notification.create({
-      user: application.user,
-      text: 'Ban quản trị đã huỷ đơn yêu cầu của bạn vì không hợp lệ.',
-    });
-
-    return res.status(httpStatus.OK).json({
-      message: 'Đã huỷ thành công.',
-    });
   } catch (err) {
     next(err);
   }

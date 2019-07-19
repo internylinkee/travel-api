@@ -7,8 +7,9 @@ module.exports = {
         .integer()
         .min(1)
         .default(1),
-      admin: Joi.boolean().default(false),
-      tourGuide: Joi.boolean().default(false),
+      q: Joi.string()
+        .min(2)
+        .max(255),
     },
   },
 
@@ -48,14 +49,6 @@ module.exports = {
   },
 
   follow: {
-    params: {
-      id: Joi.string()
-        .regex(/^[0-9a-fA-F]{24}$/)
-        .required(),
-    },
-  },
-
-  delete: {
     params: {
       id: Joi.string()
         .regex(/^[0-9a-fA-F]{24}$/)

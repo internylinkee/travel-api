@@ -2,7 +2,7 @@ const express = require('express');
 const validate = require('express-validation');
 const userControllers = require('../controllers/user-controller');
 const userValidations = require('../validations/user-validate');
-const { authorize, ADMIN } = require('../middlewares/auth');
+const { authorize } = require('../middlewares/auth');
 const { paginate } = require('../middlewares/paginate');
 
 const router = express.Router();
@@ -27,18 +27,6 @@ router
    *        type: integer
    *        mininum: 1
    *      default: 1
-   *    - in: query
-   *      name: admin
-   *      description: Select users is admin
-   *      schema:
-   *        type: boolean
-   *      default: false
-   *    - in: query
-   *      name: tourGuide
-   *      description: Select user is tour guide
-   *      schema:
-   *        type: boolean
-   *      default: false
    *    - in: query
    *      name: q
    *      description: Select user is tour guide
@@ -212,63 +200,7 @@ router
    *                    type: string
    *                    example: No auth token
    */
-  .put(validate(userValidations.update), authorize(), userControllers.update)
-  /**
-   * @swagger
-   * /users/{id}:
-   *  delete:
-   *    security:
-   *    - bearerAuth: []
-   *    tags:
-   *    - User
-   *    summary: Delete a user
-   *    description: Delete a user by admin
-   *    parameters:
-   *    - in: path
-   *      name: id
-   *      required: true
-   *      description: User id
-   *      schema:
-   *        type: string
-   *        example: 5d102dc6f82b210a7a0f937b
-   *    responses:
-   *      200:
-   *        description: OK
-   *        content:
-   *          application/json:
-   *             schema:
-   *                type: object
-   *                properties:
-   *                  message:
-   *                    type: string
-   *                    example: 'Đã xoá thành công'
-   *      400:
-   *        description: Bad request
-   *        content:
-   *          application/json:
-   *            schema:
-   *              type: object
-   *              properties:
-   *                status:
-   *                  type: interger
-   *                  example: 400
-   *                message:
-   *                  type: string
-   *                  example: Không thể xoá tài khoản là chính bạn.
-   *      401:
-   *        description: No auth token
-   *        content:
-   *          application/json:
-   *            schema:
-   *              type: object
-   *              $ref: '#/components/noAuthToken'
-        
-   */
-  .delete(
-    validate(userValidations.delete),
-    authorize(ADMIN),
-    userControllers.delete,
-  );
+  .put(validate(userValidations.update), authorize(), userControllers.update);
 
 router
   .route('/:id/follow')

@@ -124,12 +124,7 @@ router
    *                  $ref: '#/components/noAuthToken'
    */
 
-  .post(
-    upload.array('images', 10),
-    validate(postValidations.create),
-    authorize(),
-    postControllers.create,
-  );
+  .post(validate(postValidations.create), authorize(), postControllers.create);
 
 /**
  *  @swagger

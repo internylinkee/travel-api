@@ -7,6 +7,7 @@ const swagger = require('./swagger/swagger');
 const { logs } = require('./vars');
 
 const routes = require('../api/routes');
+const adminRoutes = require('../admin/routes');
 
 const passport = require('passport');
 const strategies = require('./passport');
@@ -28,6 +29,7 @@ app.use(passport.initialize());
 passport.use('jwt', strategies.jwt);
 
 app.use('/v1', routes);
+app.use('/admin', adminRoutes);
 
 app.use((req, res, next) => {
   res.status(404).json({

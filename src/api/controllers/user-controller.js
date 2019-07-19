@@ -9,16 +9,12 @@ require('../models/location-model');
 
 exports.getList = async (req, res, next) => {
   const {
-    query: { admin, tourGuide, q },
+    query: { q },
     skip,
     limit,
   } = req;
 
-  const query = {
-    role: admin ? 'admin' : 'user',
-    isTourGuide: tourGuide,
-    _id: { $ne: req.user._id },
-  };
+  const query = { isTourGuide: true };
 
   if (q) {
     query.$or = [
@@ -176,34 +172,6 @@ exports.follow = async (req, res, next) => {
 
     return res.status(httpStatus.OK).json({
       likeCount: updatedUser.followers.length,
-    });
-  } catch (err) {
-    next(err);
-  }
-};
-
-exports.delete = async (req, res, next) => {
-  const { id } = req.params;
-
-  try {
-    if (req.user._id.equals(id)) {
-      throw new Error('Không thể xoá tài khoản là chính bạn.');
-    }
-
-    const user = await User.findByIdAndUpdate(
-      id,
-      {
-        deletedAt: new Date(),
-      },
-      { new: true },
-    );
-
-    if (!user) {
-      throw new Error('Không tìm thấy user.');
-    }
-
-    return res.status(httpStatus.OK).json({
-      message: 'Đã xoá thành công',
     });
   } catch (err) {
     next(err);
