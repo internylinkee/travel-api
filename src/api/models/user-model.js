@@ -22,6 +22,11 @@ const userSchema = new mongoose.Schema(
     facebookUrl: String,
     facebookId: String,
     phone: String,
+    background: {
+      type: String,
+      default:
+        'https://images.pexels.com/photos/2662116/pexels-photo-2662116.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
+    },
     role: {
       enum: rolesEnum,
       type: String,

@@ -11,12 +11,12 @@ router
   .route('/')
   /**
    *  @swagger
-   *    /applications:
+   *    /admin/applications:
    *      get:
    *        security:
    *        - bearerAuth: []
    *        tags:
-   *        - Application
+   *        - Admin
    *        summary: Get list applications
    *        description: Get list applications by admin
    *        parameters:
@@ -51,12 +51,12 @@ router
   .route('/:id')
   /**
    *  @swagger
-   *    /applications/{id}:
+   *    /admin/applications/{id}:
    *      get:
    *        security:
    *        - bearerAuth: []
    *        tags:
-   *        - Application
+   *        - Admin
    *        summary: Get a application
    *        description: Get a application
    *        parameters:
@@ -87,16 +87,15 @@ router
     applicationControllers.get,
   );
 router
-
   .route('/:id/cancel')
   /**
    *  @swagger
-   *    /applications/{id}/cancel:
+   *    /admin/applications/{id}/cancel:
    *      put:
    *        security:
    *        - bearerAuth: []
    *        tags:
-   *        - Application
+   *        - Admin
    *        summary: Cancel a application
    *        description: Cancel a application by admin
    *        parameters:
@@ -131,6 +130,41 @@ router
   );
 router
   .route('/:id/confirm')
+  /**
+   *  @swagger
+   *    /admin/applications/{id}/confirm:
+   *      put:
+   *        security:
+   *        - bearerAuth: []
+   *        tags:
+   *        - Admin
+   *        summary: Confirm a application
+   *        description: Confirm a application by admin
+   *        parameters:
+   *        - in: param
+   *          name: id
+   *          qequired: true
+   *          schema:
+   *            type: string
+   *        responses:
+   *          200:
+   *            description: OK
+   *            content:
+   *              application/json:
+   *                schema:
+   *                  type: object
+   *                  properties:
+   *                    message:
+   *                      type: string
+   *          400:
+   *            description: Bad request
+   *          401:
+   *            description: No auth token
+   *            content:
+   *              application/json:
+   *                schema:
+   *                  $ref: '#/components/noAuthToken'
+   */
   .put(
     validate(applicationValidations.confirm),
     authorize(ADMIN),

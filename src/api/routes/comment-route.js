@@ -10,7 +10,7 @@ router
   .route('/:id')
   /**
    *  @swagger
-   *    /comments/{id}:
+   *    /v1/comments/{id}:
    *      put:
    *        security:
    *        - bearerAuth: []
@@ -47,7 +47,7 @@ router
   )
   /**
    *  @swagger
-   *    /comments/{id}:
+   *    /v1/comments/{id}:
    *      delete:
    *        security:
    *        - bearerAuth: []

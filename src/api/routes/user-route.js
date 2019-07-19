@@ -11,7 +11,7 @@ router
   .route('/')
   /**
    * @swagger
-   * /users:
+   * /v1/users:
    *  get:
    *    security:
    *    - bearerAuth: []
@@ -68,7 +68,7 @@ router
   .route('/:id')
   /**
    * @swagger
-   * /users/{id}:
+   * /v1/users/{id}:
    *   get:
    *     security:
    *     - bearerAuth: []
@@ -128,7 +128,7 @@ router
   .get(validate(userValidations.get), authorize(), userControllers.get)
   /**
    * @swagger
-   * /users/{id}:
+   * /v1/users/{id}:
    *   put:
    *     security:
    *     - bearerAuth: []
@@ -206,7 +206,7 @@ router
   .route('/:id/follow')
   /**
    * @swagger
-   * /users/{id}/follow:
+   * /v1/users/{id}/follow:
    *  put:
    *    security:
    *    - bearerAuth: []

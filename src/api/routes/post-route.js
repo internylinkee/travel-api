@@ -5,16 +5,13 @@ const postValidations = require('../validations/post-validate');
 const { authorize } = require('../middlewares/auth');
 const { paginate } = require('../middlewares/paginate');
 
-const multer = require('multer');
-const upload = multer({ dest: 'public/uploads/' });
-
 const router = express.Router();
 
 router
   .route('/')
   /**
    *  @swagger
-   *  /posts:
+   *  /v1/posts:
    *    get:
    *      tags:
    *      - Post
@@ -63,7 +60,7 @@ router
   .get(validate(postValidations.getList), paginate(), postControllers.getList)
   /**
    *  @swagger
-   *    /posts:
+   *    /v1/posts:
    *      post:
    *        security:
    *        - bearerAuth: []
@@ -73,16 +70,15 @@ router
    *        description: Create a post include images, title, content, tags
    *        requestBody:
    *          content:
-   *            multipart/form-data:
+   *            application/json:
    *              schema:
    *                type: object
    *                properties:
-   *                  images:
+   *                  imageUrl:
    *                    type: array
    *                    description: The images of the post
    *                    items:
    *                      type: string
-   *                      format: binary
    *                  title:
    *                    type: string
    *                    description: The title of the post
@@ -94,19 +90,15 @@ router
    *                  locations:
    *                    type: array
    *                    items:
-   *                      type: string
+   *                      type: ObjectId
    *                  categories:
    *                    type: array
-   *                    description: The id of category tag
    *                    items:
-   *                      type: string
+   *                      type: ObjectId
    *                  type:
    *                    type: string
    *                    description: The kind of the post
    *                    enum: ['review', 'question', 'tour']
-   *              encoding:
-   *                locations:
-   *                  contentType: application/json
    *        responses:
    *          200:
    *            description: OK
@@ -128,7 +120,7 @@ router
 
 /**
  *  @swagger
- *  /posts/hot:
+ *  /v1/posts/hot:
  *    get:
  *      tags:
  *      - Post
@@ -158,7 +150,7 @@ router
   .route('/:id')
   /**
    * @swagger
-   * /posts/{id}:
+   * /v1/posts/{id}:
    *    get:
    *      tags:
    *      - Post
@@ -189,7 +181,7 @@ router
   .get(validate(postValidations.get), postControllers.get)
   /**
    *  @swagger
-   *    /posts/{id}:
+   *    /v1/posts/{id}:
    *      put:
    *        security:
    *        - bearerAuth: []
@@ -242,7 +234,7 @@ router
   .put(validate(postValidations.update), authorize(), postControllers.update)
   /**
    *  @swagger
-   *  /posts/{id}:
+   *  /v1/posts/{id}:
    *    delete:
    *      security:
    *      - bearerAuth: []
@@ -288,7 +280,7 @@ router
   .route('/:id/like')
   /**
    *  @swagger
-   *  /posts/{id}/like:
+   *  /v1/posts/{id}/like:
    *    put:
    *      security:
    *      - bearerAuth: []
@@ -329,7 +321,7 @@ router
   .route('/:id/comments')
   /**
    *  @swagger
-   *  /posts/{id}/comments:
+   *  /v1/posts/{id}/comments:
    *    get:
    *      security:
    *      - bearerAuth: []
@@ -375,7 +367,7 @@ router
   )
   /**
    *  @swagger
-   *    /posts/{id}/comments:
+   *    /v1/posts/{id}/comments:
    *      post:
    *        security:
    *        - bearerAuth: []

@@ -1,17 +1,19 @@
+const httpStatus = require('http-status');
 const User = require('../../api/models/user-model');
+const Post = require('../../api/models/post-model');
+const Review = require('../../api/models/review-model');
+const countCollection = require('../../utils/count-collection');
 
 exports.getList = async (req, res, next) => {
+  const query = {};
   const {
-    query: { admin, tourGuide, q },
+    query: { role, tourGuide, q },
     skip,
     limit,
   } = req;
 
-  const query = {
-    role: admin ? 'admin' : 'user',
-    isTourGuide: tourGuide,
-    _id: { $ne: req.user._id },
-  };
+  role ? (query.role = role) : '';
+  query.isTourGuide = tourGuide || false;
 
   if (q) {
     query.$or = [

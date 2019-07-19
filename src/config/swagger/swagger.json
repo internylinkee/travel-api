@@ -80,6 +80,12 @@
           "_id": {
             "type": "string"
           },
+          "phone": {
+            "type": "string"
+          },
+          "background": {
+            "type": "string"
+          },
           "roles": {
             "type": "string"
           },

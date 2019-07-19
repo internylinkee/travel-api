@@ -6,7 +6,7 @@ const { register, login } = require('../validations/auth-validate');
 const router = express.Router();
 /**
  * @swagger
- * /auth/register:
+ *  /v1/auth/register:
  *  post:
  *    tags:
  *    - Auth
@@ -50,7 +50,7 @@ const router = express.Router();
 router.post('/register', validate(register), authController.register);
 /**
  * @swagger
- * /auth/login:
+ * /v1/auth/login:
  *  post:
  *    tags:
  *    - Auth

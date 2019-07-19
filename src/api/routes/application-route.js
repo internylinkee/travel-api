@@ -11,7 +11,7 @@ router
   .route('/')
   /**
    *  @swagger
-   *    /applications:
+   *    /v1/applications:
    *      post:
    *        security:
    *        - bearerAuth: []
@@ -57,7 +57,7 @@ router
   .route('/:id')
   /**
    *  @swagger
-   *    /applications/{id}:
+   *    /v1/applications/{id}:
    *      get:
    *        security:
    *        - bearerAuth: []

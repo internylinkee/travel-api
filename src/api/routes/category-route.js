@@ -4,7 +4,7 @@ const categoryControllers = require('../controllers/category-controller');
 const router = express.Router();
 /**
  *  @swagger
- *    /categories:
+ *    /v1/categories:
  *      get:
  *        tags:
  *        - Category

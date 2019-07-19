@@ -4,7 +4,7 @@ const locationControllers = require('../controllers/location-controller');
 const router = express.Router();
 /**
  *  @swagger
- *    /locations:
+ *    /v1/locations:
  *      get:
  *        tags:
  *        - Location

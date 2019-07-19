@@ -3,7 +3,7 @@ const Joi = require('joi');
 module.exports = {
   getList: {
     query: {
-      admin: Joi.boolean(),
+      role: Joi.string(),
       tourGuide: Joi.boolean(),
       q: Joi.string()
         .min(2)
