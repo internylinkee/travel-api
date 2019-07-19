@@ -3,7 +3,6 @@ const validate = require('express-validation');
 const applicationControllers = require('../controllers/application-controller');
 const applicationValidations = require('../validations/application-validate');
 const { authorize, ADMIN } = require('../middlewares/auth');
-const { paginate } = require('../middlewares/paginate');
 
 const router = express.Router();
 

@@ -361,7 +361,6 @@ router
    */
   .get(
     validate(postValidations.getListComments),
-    authorize(),
     paginate(),
     postControllers.getListComments,
   )

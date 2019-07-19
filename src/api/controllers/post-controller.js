@@ -290,6 +290,7 @@ exports.getHotPost = async (req, res, next) => {
     const posts = await Post.find(query)
       .sort({ likes: -1 })
       .limit(10)
+      .populate('user')
       .lean();
 
     return res.status(httpStatus.OK).json(posts);

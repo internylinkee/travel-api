@@ -76,6 +76,8 @@ exports.update = async (req, res, next) => {
         lastName,
         facebookUrl,
         phone,
+        avatar,
+        background,
         location,
         certificate,
         introduction,
@@ -100,6 +102,8 @@ exports.update = async (req, res, next) => {
       },
       facebookUrl: facebookUrl || user.facebookUrl,
       phone: phone || user.phone,
+      avatar: avatar || user.avatar,
+      background: background || user.background,
     });
 
     if (user.isTourGuide) {
@@ -130,6 +134,10 @@ exports.follow = async (req, res, next) => {
   let updatedUser;
 
   try {
+    if (userId.equals(id)) {
+      throw new Error('Bạn không thể tự follow chính mình.');
+    }
+
     const user = await User.findById(id).lean();
     if (!user) {
       throw new Error('User not found.');

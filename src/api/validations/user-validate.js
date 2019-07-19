@@ -38,6 +38,12 @@ module.exports = {
       phone: Joi.string()
         .min(9)
         .max(255),
+      avatar: Joi.string()
+        .min(9)
+        .max(255),
+      background: Joi.string()
+        .min(9)
+        .max(255),
       location: Joi.string().regex(/^[0-9a-fA-F]{24}$/),
       certificate: Joi.string()
         .min(2)
