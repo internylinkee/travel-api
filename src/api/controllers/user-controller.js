@@ -72,6 +72,8 @@ exports.update = async (req, res, next) => {
   try {
     const {
       body: {
+        dob,
+        isMale,
         firstName,
         lastName,
         facebookUrl,
@@ -104,6 +106,8 @@ exports.update = async (req, res, next) => {
       phone: phone || user.phone,
       avatar: avatar || user.avatar,
       background: background || user.background,
+      dob: dob || user.dob,
+      isMale: isMale || user.isMale,
     });
 
     if (user.isTourGuide) {

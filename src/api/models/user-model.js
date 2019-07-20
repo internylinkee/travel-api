@@ -17,6 +17,8 @@ const userSchema = new mongoose.Schema(
       type: String,
       unique: true,
     },
+    dob: Date,
+    isMale: Boolean,
     password: String,
     avatar: String,
     facebookUrl: String,
