@@ -5,9 +5,6 @@ const cloudinary = require('../../config/cloudinary');
 
 exports.upload = async (req, res, next) => {
   const { files } = req;
-  const appDomain = process.env.APP_DOMAIN
-    ? process.env.APP_DOMAIN
-    : `http://localhost:${process.env.PORT || 3000}`;
   try {
     const pathFiles = files.map(file => file.path);
 
