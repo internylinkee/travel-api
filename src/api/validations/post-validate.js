@@ -29,11 +29,11 @@ module.exports = {
     body: {
       title: Joi.string()
         .min(2)
-        .max(255)
+        .max(3000)
         .required(),
       content: Joi.string()
         .min(2)
-        .max(3000)
+        .max(11000)
         .required(),
       categories: Joi.array()
         .items(Joi.string().regex(/^[0-9a-fA-F]{24}$/))
@@ -47,7 +47,7 @@ module.exports = {
         .required(),
       description: Joi.string()
         .min(2)
-        .max(255),
+        .max(10000),
       imageUrls: Joi.array().items(Joi.string()),
     },
   },
@@ -55,10 +55,10 @@ module.exports = {
     body: {
       title: Joi.string()
         .min(2)
-        .max(255),
+        .max(3000),
       content: Joi.string()
         .min(2)
-        .max(3000),
+        .max(11000),
       categories: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
       locations: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
       type: Joi.string()
