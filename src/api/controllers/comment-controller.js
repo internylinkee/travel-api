@@ -1,5 +1,6 @@
 const httpStatus = require('http-status');
 const Comment = require('../models/comment-model');
+const Post = require('../models/post-model');
 
 exports.update = async (req, res, next) => {
   const {
@@ -38,6 +39,10 @@ exports.delete = async (req, res, next) => {
     if (!comment) {
       throw new Error('Không tìm thấy bình luận.');
     }
+
+    await Post.findOneAndUpdate(comment.post, {
+      $inc: { commentCount: -1 },
+    });
 
     return res.status(httpStatus.OK).json({
       message: 'Xoá bình luận thành công.',

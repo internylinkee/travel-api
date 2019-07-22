@@ -45,6 +45,10 @@ const postSchema = new mongoose.Schema(
       type: String,
       enum: typeEnum,
     },
+    commentCount: {
+      type: Number,
+      default: 0,
+    },
     deletedAt: Date,
   },
   {

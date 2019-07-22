@@ -1,16 +1,18 @@
 const httpStatus = require('http-status');
 const Post = require('../models/post-model');
 const Comment = require('../models/comment-model');
+const User = require('../models/user-model');
 const Notification = require('../models/notification-model');
 const countCollection = require('../../utils/count-collection');
 require('../models/category-model');
 
 exports.getList = async (req, res, next) => {
   const query = {};
+  const sortBy = { createdAt: -1 };
   let posts;
 
   const {
-    query: { q, location, category, user, type },
+    query: { q, location, category, user, type, sort },
     limit,
     skip,
   } = req;
@@ -25,6 +27,13 @@ exports.getList = async (req, res, next) => {
       ])
     : '';
 
+  switch (sort) {
+    case 'like':
+      sortBy.likes = -1;
+    case 'comment':
+      sortBy.commentCount = -1;
+  }
+
   async function findPost(query) {
     return await Post.find(query)
       .skip(skip)
@@ -37,7 +46,7 @@ exports.getList = async (req, res, next) => {
         'categories',
         'locations',
       ])
-      .sort({ likes: -1, createdAt: -1 })
+      .sort(sortBy)
       .lean();
   }
 
@@ -61,8 +70,6 @@ exports.getList = async (req, res, next) => {
         $and: [{ categories: { $in: category } }, query],
       });
     }
-
-    await countCollection(posts, Comment, 'post', 'commentCount');
 
     return res.json(posts);
   } catch (err) {
@@ -116,6 +123,10 @@ exports.create = async (req, res, next) => {
       user,
       featureImage: urlFileUploaded[0],
       images: urlFileUploaded,
+    });
+
+    await User.findByIdAndUpdate(user._id, {
+      $inc: { postCount: 1 },
     });
 
     return res.status(httpStatus.CREATED).json(post);
@@ -222,6 +233,10 @@ exports.delete = async (req, res, next) => {
       throw new Error('Không tìm thấy bài viết.');
     }
 
+    await User.findByIdAndUpdate(user._id, {
+      $inc: { postCount: -1 },
+    });
+
     return res.status(httpStatus.OK).json({
       message: 'Xoá bài viết thành công.',
     });
@@ -260,7 +275,7 @@ exports.createComment = async (req, res, next) => {
     user,
   } = req;
   try {
-    const post = await Post.findById(id).lean();
+    const post = await Post.findById(id);
     if (!post) {
       throw new Error('Không tìm thấy bài viết.');
     }
@@ -276,6 +291,9 @@ exports.createComment = async (req, res, next) => {
         user: post.user,
         text: `${user.fullName.firstName} đã bình luận về bài viết của bạn.`,
       }));
+
+    post.commentCount += 1;
+    await post.save();
 
     return res.status(httpStatus.CREATED).json(comment);
   } catch (err) {

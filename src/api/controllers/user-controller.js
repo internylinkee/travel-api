@@ -9,13 +9,13 @@ require('../models/location-model');
 
 exports.getList = async (req, res, next) => {
   const {
-    query: { q },
+    query: { q, sort },
     skip,
     limit,
   } = req;
 
   const query = { isTourGuide: true };
-
+  const sortBy = {};
   if (q) {
     query.$or = [
       { 'fullName.firstName': { $regex: q, $options: 'i' } },
@@ -23,10 +23,21 @@ exports.getList = async (req, res, next) => {
     ];
   }
 
+  switch (sort) {
+    case 'like':
+      sortBy.followers = -1;
+    case 'review':
+      sortBy['tourGuideProfile.reviewCount'] = -1;
+    case 'post':
+      sortBy.postCount = -1;
+    default:
+  }
+
   try {
     const users = await User.find(query)
       .skip(skip)
       .limit(limit)
+      .sort(sortBy)
       .lean();
 
     await Promise.all([

@@ -16,6 +16,7 @@ module.exports = {
       type: Joi.string()
         .min(2)
         .max(255),
+      sort: Joi.string().valid('like', 'comment'),
     },
   },
   get: {

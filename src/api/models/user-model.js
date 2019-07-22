@@ -49,6 +49,10 @@ const userSchema = new mongoose.Schema(
       certificate: String,
       introduction: String,
     },
+    postCount: {
+      type: Number,
+      default: 0,
+    },
     deletedAt: Date,
   },
   {
