@@ -48,6 +48,8 @@ const userSchema = new mongoose.Schema(
       rating: Number,
       certificate: String,
       introduction: String,
+      expirence: String,
+      languages: String,
     },
     postCount: {
       type: Number,

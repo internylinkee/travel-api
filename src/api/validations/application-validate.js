@@ -28,14 +28,24 @@ module.exports = {
         .error(() => ({ message: 'location must be a objectId' })),
       certificate: Joi.string()
         .min(2)
-        .max(255)
+        .max(3000)
         .required()
         .error(() => ({ message: 'certificate is required.' })),
       introduction: Joi.string()
         .min(2)
-        .max(255)
-        .required()
-        .error(() => ({ message: 'introduction is required.' })),
+        .max(3000),
+      expirence: Joi.string()
+        .min(2)
+        .max(3000),
+      languages: Joi.string()
+        .min(2)
+        .max(300)
+        .required(),
+      isMale: Joi.boolean().required(),
+      phone: Joi.string().required(),
+      dob: Joi.date()
+        .max('now')
+        .required(),
     },
   },
 

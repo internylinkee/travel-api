@@ -126,6 +126,8 @@ exports.update = async (req, res, next) => {
         location: location || user.tourGuideProfile.location,
         certificate: certificate || user.tourGuideProfile.certificate,
         introduction: introduction || user.tourGuideProfile.introduction,
+        languages: languages || user.tourGuideProfile.languages,
+        expirence: expirence || user.tourGuideProfile.expirence,
       });
     }
 

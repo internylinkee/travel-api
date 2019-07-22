@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
 const Application = require('../../api/models/appilication-model');
 const Notification = require('../../api/models/notification-model');
+const User = require('../../api/models/user-model');
 const {
   STATUS_CANCEL,
   STATUS_CONFIRMED,
@@ -94,6 +95,32 @@ exports.confirm = async (req, res, next) => {
     if (application.status === STATUS_CONFIRMED) {
       throw new Error('Bạn đã xác nhận đơn yêu cầu này.');
     }
+
+    const {
+      location,
+      certificate,
+      introduction,
+      languages,
+      expirence,
+      phone,
+      dob,
+      isMale,
+    } = application;
+
+    await User.findByIdAndUpdate(application.user, {
+      tourGuideProfile: {
+        location,
+        certificate,
+        introduction,
+        languages,
+        expirence,
+        reviewCount: 0,
+        rating: 0,
+      },
+      phone,
+      dob,
+      isMale,
+    });
 
     application.status = STATUS_CONFIRMED;
     await application.save();

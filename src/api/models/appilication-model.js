@@ -12,10 +12,7 @@ const applicationSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
     },
-    location: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Location',
-    },
+    location: String,
     certificate: String,
     introduction: String,
     status: {
@@ -23,6 +20,11 @@ const applicationSchema = new mongoose.Schema(
       enum: statusEnum,
       default: STATUS_PENDING,
     },
+    phone: String,
+    dob: Date,
+    isMale: Boolean,
+    languages: String,
+    expirence: String,
   },
   {
     timestamps: true,

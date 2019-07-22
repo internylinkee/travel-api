@@ -25,11 +25,18 @@ exports.get = async (req, res, next) => {
 };
 
 exports.create = async (req, res, next) => {
+  const { user } = req;
   try {
     const isApplicationExist =
-      (await Application.findOne({ user: req.user })
+      (await Application.findOne({ user })
         .select('_id')
         .lean()) !== null;
+
+    if (user.tourGuideProfile) {
+      throw new Error(
+        'Bạn đã là hướng dẫn viên nên không thể tạo thêm đăng ký.',
+      );
+    }
 
     if (isApplicationExist) {
       throw new Error(
@@ -39,7 +46,7 @@ exports.create = async (req, res, next) => {
 
     const application = await Application.create({
       ...req.body,
-      user: req.user._id,
+      user: user._id,
     });
 
     return res.status(httpStatus.CREATED).json(application);
