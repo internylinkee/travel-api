@@ -189,3 +189,20 @@ exports.follow = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.getHotUsers = async (req, res, next) => {
+  try {
+    const users = await User.find()
+      .sort({ followers: -1 })
+      .limit(5)
+      .select('fullName avatar followers')
+      .lean();
+    await countCollection(users, Post, 'user', 'postCount');
+
+    users.forEach(user => (user.followerCount = user.followers.length));
+
+    return res.status(httpStatus.OK).json(users);
+  } catch (err) {
+    return next(err);
+  }
+};

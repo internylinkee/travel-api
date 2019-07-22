@@ -289,7 +289,7 @@ exports.getHotPost = async (req, res, next) => {
   try {
     const posts = await Post.find(query)
       .sort({ likes: -1 })
-      .limit(10)
+      .limit(5)
       .populate('user')
       .lean();
 

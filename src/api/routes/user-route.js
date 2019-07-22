@@ -63,7 +63,7 @@ router
     paginate(),
     userControllers.getList,
   );
-
+router.route('/hot').get(userControllers.getHotUsers);
 router
   .route('/:id')
   /**

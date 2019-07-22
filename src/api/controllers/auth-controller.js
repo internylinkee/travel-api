@@ -21,7 +21,7 @@ exports.register = async (req, res, next) => {
         firstName,
         lastName,
       },
-      avatar: `https://ui-avatars.com/api/?size=512&&name=${lastName}+${lastName}`,
+      avatar: `https://ui-avatars.com/api/?size=512&&name=${firstName}+${lastName}`,
     });
     const { user, accessToken } = await User.findOneAndGenerateToken({
       email,
