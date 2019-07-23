@@ -52,6 +52,12 @@ module.exports = {
       introduction: Joi.string()
         .min(2)
         .max(255),
+      expirence: Joi.string()
+        .min(2)
+        .max(3000),
+      languages: Joi.string()
+        .min(2)
+        .max(3000),
       dob: Joi.date().max('now'),
       isMale: Joi.boolean(),
     },

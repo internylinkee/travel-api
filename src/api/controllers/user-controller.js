@@ -94,6 +94,8 @@ exports.update = async (req, res, next) => {
         location,
         certificate,
         introduction,
+        expirence,
+        languages,
       },
       params: { id },
       user: { _id: userId },

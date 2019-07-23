@@ -86,7 +86,7 @@ module.exports = {
     body: {
       text: Joi.string()
         .min(2)
-        .max(255)
+        .max(1000)
         .required(),
     },
     params: {

@@ -108,6 +108,10 @@ exports.confirm = async (req, res, next) => {
     } = application;
 
     await User.findByIdAndUpdate(application.user, {
+      isTourGuide: true,
+      phone,
+      dob,
+      isMale,
       tourGuideProfile: {
         location,
         certificate,
@@ -117,9 +121,6 @@ exports.confirm = async (req, res, next) => {
         reviewCount: 0,
         rating: 0,
       },
-      phone,
-      dob,
-      isMale,
     });
 
     application.status = STATUS_CONFIRMED;
